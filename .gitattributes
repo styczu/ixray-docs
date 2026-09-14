@@ -1,0 +1,3 @@
+# Dokumentacja trzymana w LF: edycja Pythonem bez newline='' zamienia CRLF na LF
+# i zaśmieca diff. Pliki gry (xml, ltx) tu nie leżą, więc nie ma sprzeczności.
+*.md text eol=lf
