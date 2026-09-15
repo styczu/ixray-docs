@@ -6,9 +6,6 @@ rozwiązane są z listy usuwane. Kolejność od najbardziej wpływowych.
 
 ## Repozytoria
 
-**`ixray-hd-icons` nie ma zdalnego repozytorium** — istnieje tylko lokalnie, bez kopii
-zapasowej. Dwa commity.
-
 **`ixray-hd-hud` (dodatek obcy) dowozi własny `configs/ui/actor_menu_16.xml`** —
 z `cols_num="7"`. Kopia z `ixray-hd-icons` różni się od niej wyłącznie sześcioma siatkami.
 Dziś wygrywa `ixray-hd-icons` (montowanie jest alfabetyczne, widać to w logu), ale
@@ -85,6 +82,12 @@ workflow publikujący dokumentację.
 wymaga liniowej. To świadome odstępstwo, ale warto o nim pamiętać przy ewentualnym PR-ze.
 
 ## Drobne
+
+**Zainstalowany `addon.init` dodatku `ixray-hd-icons` jest pusty.** W grze ma 0 B
+(zmieniony 15.09 o 13:40), a w repo 28 B (`name: IX-Ray HD Icons [tmz]`). To jedyna
+różnica z `diff -rq` z [docs/wdrazanie.md](docs/wdrazanie.md). Dodatek mimo to się montuje:
+log z 15.09 14:21 ma `Processing ixray-hd-icons\ addon completed!`. Czy brak nazwy
+cokolwiek zmienia, nie sprawdzano.
 
 **Testów nie uruchamia żadne CI** — weryfikacja jest wyłącznie lokalna i ręczna.
 

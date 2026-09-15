@@ -1,6 +1,6 @@
 # Rejestr repozytoriów
 
-Stan na 14 września 2026.
+Stan na 15 września 2026.
 
 ## Silnik
 
@@ -21,9 +21,9 @@ Wszystkie leżą w `/home/tmz/Projects/ixray-addons/`.
 
 Ikony ekwipunku w wysokiej rozdzielczości i geometria siatki ekwipunku.
 
-- Zdalne: **brak** — repo tylko lokalne.
+- Zdalne: `https://github.com/styczu/ixray-hd-icons.git` (prywatne, od 15 września 2026).
 - Zawiera: `configs/ui/actor_menu_16.xml`, `configs/ui/scroll_bar{,_16}.xml`
-  (podmiana **całych plików**), `configs/misc/mod_items_hd_icons.ltx` (DLTX),
+  (podmiana **całych plików**), `configs/mod_system_hd_icons.ltx` (DLTX),
   `textures/ui/ui_icon_equipment_hd.dds`.
 - Gałęzie silnika: łańcuch gałęzi źródłowych `fix/inventory-drop-cell` →
   `feature/inventory-drop-preview` → `feature/inventory-cell-grid`, każda na poprzedniej,
