@@ -55,14 +55,13 @@ Fonty TTF i obsługa stron kodowych dla polskiego i czeskiego.
 - Zawiera: fonty w `fonts/pol/` i `fonts/cze/`, `configs/mod_system_ttfext.ltx`, teksty.
 - Gałąź silnika: `feature/ttf-codepages`.
 - Własne narzędzia w `tools/`:
-  - `install-build.sh` — pobiera artefakt CI i instaluje silnik do gry;
   - `rebase-patch.sh` — przenosi gałąź na nowy upstream i eksportuje patche do katalogu
     spoza repo silnika (gałąź fontów nie ma pakietu w `patches/`). Opis:
     `ixray-ttf-extended/docs/utrzymanie-patcha.md`;
   - `check_font.py` — sprawdza, czy font pokrywa wymaganą stronę kodową.
 
-`install-build.sh` obsługuje **cały projekt**, nie tylko ten dodatek — mimo że leży
-w jego repozytorium. Opis użycia: [wdrazanie.md](wdrazanie.md).
+Narzędzia obsługujące cały projekt (`install-build.sh`, `addon-sync`) leżą
+w `ixray-docs/tools/`, nie tutaj. Opis użycia: [wdrazanie.md](wdrazanie.md).
 
 ## Dodatki obce
 

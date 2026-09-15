@@ -111,7 +111,8 @@ Scalone do `build/tmz`, działa w grze.
 
 | Narzędzie | Gdzie | Do czego |
 | --- | --- | --- |
-| `install-build.sh` | `ixray-ttf-extended/tools/` | pobiera artefakt CI i instaluje silnik do gry, z kopią zapasową i weryfikacją sha |
+| `install-build.sh` | `ixray-docs/tools/` | pobiera artefakt CI i instaluje silnik do gry, z kopią zapasową i weryfikacją sha |
+| `addon-sync` | `ixray-docs/tools/` | synchronizuje dane dodatków z katalogiem gry |
 | `rebase-patch.sh` | `ixray-ttf-extended/tools/` | przenosi gałąź na nowy upstream i eksportuje patch |
 | `check_font.py` | `ixray-ttf-extended/tools/` | sprawdza pokrycie strony kodowej przez font |
 | `apply.py` | `<ixray>/patches/*/` | sprawdza i nakłada pakiet poprawki |

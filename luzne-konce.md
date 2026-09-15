@@ -94,11 +94,11 @@ zainstalowany `addon.init` ma 0 B (wtedy silnik wychodzi wcześniej) albo co naj
 `AddonName` widzi tylko Lua (`src/xrGame/addon_manager_script.cpp`), a żaden `*.script`
 w `gamedata/` ani `ixr_addons/` go nie używa.
 
-**`~/bin/addon-sync` nie leży w żadnym repozytorium**, a
-[docs/wdrazanie.md](docs/wdrazanie.md#dodatek) przepisuje jego listę wykluczeń. Zmiana
-skryptu rozjedzie się z dokumentem bez śladu. Obie kontrole zgodności pomijają też różne
-zbiory plików: `addon-sync` tylko `README.md`, `AGENTS.md` i `CLAUDE.md`, a `diff -rq
--x '*.md'` wszystkie `.md`. Dziś bez znaczenia, bo w trzech dodatkach nie ma innych `.md`.
+**Obie kontrole zgodności instalacji dodatku pomijają różne zbiory plików**:
+`addon-sync` tylko `README.md`, `AGENTS.md` i `CLAUDE.md` (patrz `RSYNC_EXCLUDES`
+w skrypcie), a ręczne `diff -rq -x '*.md'` z
+[docs/wdrazanie.md](docs/wdrazanie.md#dodatek) wszystkie `.md`. Dziś bez znaczenia,
+bo w trzech dodatkach nie ma innych `.md`.
 
 **Testów nie uruchamia żadne CI** — weryfikacja jest wyłącznie lokalna i ręczna.
 

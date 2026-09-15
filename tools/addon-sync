@@ -1,0 +1,189 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+PROJECTS_DIR="/home/tmz/Projects/ixray-addons"
+GAME_DIR="/home/tmz/Games/Heroic/S.T.A.L.K.E.R. Call of Pripyat/ixr_addons"
+
+ACTION=""
+SYNC_ALL=false
+VERBOSE=false
+SINGLE_ADDON=""
+
+RSYNC_EXCLUDES=(
+  --exclude='.git*'
+  --exclude='.github*'
+  --exclude='docs/'
+  --exclude='src/'
+  --exclude='tools/'
+  --exclude='README.md'
+  --exclude='readme.md'
+  --exclude='AGENTS.md'
+  --exclude='agents.md'
+  --exclude='CLAUDE.md'
+  --exclude='claude.md'
+)
+
+show_help() {
+  cat << EOF
+Użycie: $(basename "$0") <AKCJA> [ZASIĘG] [OPCJE]
+
+Akcje (wymagana dokładnie jedna):
+  -s, --sync              Wykonaj synchronizację
+  -c, --check             Sprawdź różnice (bez kopiowania)
+  -l, --list              Wyświetl listę dostępnych addonów
+  -h, --help              Wyświetl tę pomoc
+
+Zasięg (wymagane dla -s oraz -c):
+  -a, --all               Wszystkie addony
+  -n, --name <addon>      Konkretny addon
+
+Opcje dodatkowe:
+  -v, --verbose           Szczegółowy raport różnic dla -c (pliki i daty)
+
+EOF
+}
+
+if [[ $# -eq 0 ]]; then
+  show_help
+  exit 0
+fi
+
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    -s|--sync)
+      ACTION="sync"
+      shift
+      ;;
+    -c|--check)
+      ACTION="check"
+      shift
+      ;;
+    -l|--list)
+      ACTION="list"
+      shift
+      ;;
+    -a|--all)
+      SYNC_ALL=true
+      shift
+      ;;
+    -n|--name)
+      SINGLE_ADDON="${2:-}"
+      if [[ -z "$SINGLE_ADDON" ]]; then
+        echo "Błąd: Brak nazwy addonu po fladze $1" >&2
+        exit 1
+      fi
+      shift 2
+      ;;
+    -v|--verbose)
+      VERBOSE=true
+      shift
+      ;;
+    -h|--help)
+      show_help
+      exit 0
+      ;;
+    *)
+      echo "Błąd: Nieznana opcja: $1" >&2
+      show_help
+      exit 1
+      ;;
+  esac
+done
+
+if [[ "$ACTION" = "list" ]]; then
+  echo "Dostępne addony w $PROJECTS_DIR:"
+  find "$PROJECTS_DIR" -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "engine-bin" -exec basename {} \;
+  exit 0
+fi
+
+if [[ -z "$ACTION" ]]; then
+  echo "Błąd: Nie wybrano akcji (-s, -c lub -l)." >&2
+  show_help
+  exit 1
+fi
+
+if [[ "$SYNC_ALL" = false && -z "$SINGLE_ADDON" ]]; then
+  echo "Błąd: Musisz podać zasięg: -a (wszystkie) lub -n <nazwa>." >&2
+  show_help
+  exit 1
+fi
+
+check_addon() {
+  local addon_path="$1"
+  local addon_name
+  addon_name=$(basename "$addon_path")
+  local target_path="$GAME_DIR/$addon_name"
+
+  if [[ ! -d "$addon_path" ]]; then
+    echo "Błąd: Addon '$addon_name' nie istnieje w $PROJECTS_DIR" >&2
+    return 1
+  fi
+
+  if [[ ! -d "$target_path" ]]; then
+    echo -e "[\e[31mBRAK W CELU\e[0m] $addon_name"
+    return 0
+  fi
+
+  # Wyciągamy pliki, które rsync wykrył jako inne/nowe
+  local diff_files
+  diff_files=$(rsync -i -nr -c "${RSYNC_EXCLUDES[@]}" "$addon_path/" "$target_path/" | awk '{print $2}' || true)
+
+  if [[ -n "$diff_files" ]]; then
+    echo -e "[\e[33mRÓŻNI SIĘ\e[0m]  $addon_name"
+    
+    if [[ "$VERBOSE" = true ]]; then
+      while IFS= read -r rel_file; do
+        [[ -z "$rel_file" ]] && continue
+        local src_file="$addon_path/$rel_file"
+        local dst_file="$target_path/$rel_file"
+
+        local src_mtime="brak w źródle"
+        local dst_mtime="brak w celu"
+
+        [[ -f "$src_file" ]] && src_mtime=$(stat -c '%y' "$src_file" | cut -d'.' -f1)
+        [[ -f "$dst_file" ]] && dst_mtime=$(stat -c '%y' "$dst_file" | cut -d'.' -f1)
+
+        echo "  - $rel_file"
+        echo "      Źródło: $src_mtime"
+        echo "      Cel:    $dst_mtime"
+      done <<< "$diff_files"
+    fi
+  else
+    echo -e "[\e[32mZGODNY\e[0m]    $addon_name"
+  fi
+}
+
+sync_addon() {
+  local addon_path="$1"
+  local addon_name
+  addon_name=$(basename "$addon_path")
+  local target_path="$GAME_DIR/$addon_name"
+
+  if [[ ! -d "$addon_path" ]]; then
+    echo "Błąd: Addon '$addon_name' nie istnieje w $PROJECTS_DIR" >&2
+    return 1
+  fi
+
+  echo "Synchronizacja: $addon_name -> $target_path"
+  mkdir -p "$target_path"
+  rsync -av "${RSYNC_EXCLUDES[@]}" "$addon_path/" "$target_path/"
+}
+
+process_target() {
+  local target_path="$1"
+  if [[ "$ACTION" = "check" ]]; then
+    check_addon "$target_path"
+  elif [[ "$ACTION" = "sync" ]]; then
+    sync_addon "$target_path"
+  fi
+}
+
+if [[ -n "$SINGLE_ADDON" ]]; then
+  process_target "$PROJECTS_DIR/$SINGLE_ADDON"
+elif [[ "$SYNC_ALL" = true ]]; then
+  while IFS= read -r -d '' dir; do
+    process_target "$dir"
+  done < <(find "$PROJECTS_DIR" -maxdepth 1 -mindepth 1 -type d ! -name ".*" ! -name "engine-bin" -print0)
+fi
+
+echo "Gotowe."

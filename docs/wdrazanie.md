@@ -6,7 +6,8 @@ w C++ wymaga przejścia przez CI i instalacji binarek — kilkanaście minut.
 ## Dodatek
 
 Katalog roboczy dodatku **nie jest** tym, z którego czyta gra. Dodatek trzeba wdrożyć.
-Służy do tego narzędzie `~/bin/addon-sync`; to skrypt, który nie leży w żadnym repozytorium:
+Służy do tego narzędzie `ixray-docs/tools/addon-sync`; `~/bin/addon-sync` to symlink
+do niego, dla wygody (PATH):
 
 ```sh
 addon-sync -c -a            # sprawdź wszystkie dodatki (rsync -n -c, sumy kontrolne)
@@ -15,7 +16,7 @@ addon-sync -s -n <nazwa>    # wdróż (rsync -av)
 ```
 
 Źródłem są katalogi w `/home/tmz/Projects/ixray-addons` z wyjątkiem `engine-bin`.
-Skrypt pomija `.git*`, `docs/`, `src/`, `tools/`, `README.md`, `AGENTS.md` i `CLAUDE.md`.
+Lista pomijanych plików — `RSYNC_EXCLUDES` w skrypcie, to źródło prawdy.
 Bez narzędzia można użyć `cp -r <repo-dodatku>/. "<gra>/ixr_addons/<nazwa>/"`, ale to
 kopiuje wszystko, także `.git` i dokumenty.
 
@@ -70,11 +71,11 @@ Budowanie silnika zajmuje ~13 minut, Non-Unity ~17.
 
 ### 3. Zainstaluj
 
-Narzędzie: `/home/tmz/Projects/ixray-addons/ixray-ttf-extended/tools/install-build.sh`
+Narzędzie: `ixray-docs/tools/install-build.sh`, w PATH jako `install-build`
+(`~/bin/install-build` to symlink do niego).
 
 ```sh
-cd /home/tmz/Projects/ixray-addons/ixray-ttf-extended
-./tools/install-build.sh \
+install-build \
   --branch <gałąź> --config RelWithDebInfo --run <ID_PRZEBIEGU> \
   --game "/home/tmz/Games/Heroic/S.T.A.L.K.E.R. Call of Pripyat" \
   --builds /home/tmz/Projects/ixray-addons/engine-bin \
@@ -91,8 +92,6 @@ Co skrypt robi sam: sprawdza, czy gra nie jest uruchomiona; weryfikuje, że pobr
 binarka **niesie oczekiwany sha, zanim cokolwiek podmieni**; robi kopię zapasową
 nadpisywanych plików (`bin.backup-<data>`) z manifestami md5; po instalacji porównuje
 sumy kontrolne.
-
-Domyślne `--game` i `--builds` skryptu nie odpowiadają temu układowi — podawaj je jawnie.
 
 ### 4. Sprawdź, co naprawdę siedzi w grze
 
