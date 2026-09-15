@@ -86,11 +86,12 @@ Wykrywanie zależności ma dwie odmiany:
 ## Pułapki
 
 - **`patches/` jest jawnie wyłączone z reguły `patch*/`.** Upstreamowy `.gitignore` ignoruje
-  tymczasowe katalogi `patch*/`, co łapało też `patches/`. Na `build/tmz` od `356b52de7`
-  zaraz po tej regule stoją `!patches/` i `!patches/**`. `patch_tmp/` i podobne dalej są
-  ignorowane (`git check-ignore -v patch_tmp/` → `.gitignore:60:patch*/`). Wyjątek obejmuje
-  całe poddrzewo, więc wcześniejsze reguły (`*.log`, `build*/`, `bin/`, `temp/`…) nie
-  działają wewnątrz `patches/` i nie zostawiaj tam plików roboczych. Gałęzie źródłowe stoją
+  tymczasowe katalogi `patch*/`, co łapało też `patches/`. Na `build/tmz` zaraz po tej
+  regule stoi `!patches/` (w obecnym kształcie od `c43e3262f`). Przywraca sam katalog, a
+  pliki w nim podlegają zwykłym regułom: `patches/foo.log` łapie `*.log`, a
+  `patches/patch_tmp/` i `patch_tmp/` łapie `patch*/`. **Nie dopisuj `!patches/**`** — nie
+  jest potrzebne, a wyłączyłoby w `patches/` wszystkie wcześniejsze reguły (tak było
+  w `356b52de7`). Gałęzie źródłowe stoją
   na czystym upstreamie i wyjątku nie mają. Nie potrzebują go, bo pakietów nie niosą
   (wyjątkiem jest pozostałość `ea5103d0e`, niżej).
   Sprawdzając plik już śledzony, dodaj `git check-ignore -v --no-index`. Bez tej opcji
