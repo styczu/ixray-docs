@@ -62,10 +62,6 @@ Fonty TTF i obsługa stron kodowych dla polskiego i czeskiego.
 `install-build.sh` obsługuje **cały projekt**, nie tylko ten dodatek — mimo że leży
 w jego repozytorium. Opis użycia: [wdrazanie.md](wdrazanie.md).
 
-### `cop-localization-fixes`
-
-Pusty katalog, bez `addon.init`, nie jest repozytorium. Silnik go nie montuje.
-
 ## Dodatki obce
 
 W `<gra>/ixr_addons/` siedzi kilkanaście dodatków spoza tego projektu

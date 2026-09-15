@@ -4,30 +4,16 @@ Rozjazdy znalezione przy spisywaniu dokumentacji 14 września 2026, uzupełnione
 15 września po integracji panelu z inventory. Każdy to osobna decyzja; rzeczy
 rozwiązane są z listy usuwane. Kolejność od najbardziej wpływowych.
 
-## Dokumentacja odwołująca się w próżnię
-
-**Notatka twierdzi, że jej kopia leży w zainstalowanym dodatku** — w całym
-`<gra>/ixr_addons/` nie ma ani jednego pliku `.md`.
-
-**Ścieżka magazynu buildów w `ixray-ttf-extended/docs/utrzymanie-patcha.md` jest
-nieaktualna**: dokument mówi `~/Stalker/builds`, a realny magazyn to
-`/home/tmz/Projects/ixray-addons/engine-bin`. Katalog `~/Stalker/builds` nie istnieje.
-
 ## Repozytoria
 
 **`ixray-hd-icons` nie ma zdalnego repozytorium** — istnieje tylko lokalnie, bez kopii
 zapasowej. Dwa commity.
-
-**`cop-localization-fixes` to pusty katalog** bez `addon.init`, i w katalogu roboczym,
-i w grze. Silnik go nie montuje.
 
 **`ixray-hd-hud` (dodatek obcy) dowozi własny `configs/ui/actor_menu_16.xml`** —
 z `cols_num="7"`. Kopia z `ixray-hd-icons` różni się od niej wyłącznie sześcioma siatkami.
 Dziś wygrywa `ixray-hd-icons` (montowanie jest alfabetyczne, widać to w logu), ale
 wystarczy zmiana nazwy katalogu, żeby ekwipunek „wrócił" do siedmiu kolumn bez żadnego
 błędu. Kontrola: [docs/dodatki.md](docs/dodatki.md#kolizje-między-dodatkami--kontrola-przy-integracji).
-
-**`ixray-ui-params` ma 4 commity niewypchnięte na `origin/main`** (stan z 15.09).
 
 ## Dane dodatków
 
@@ -86,9 +72,12 @@ z gałęzi, jak wymaga zasada.
 przepisuje ich linie. Sprawdzone 15.09 na czystym `6c793faee`. Odnotowane w README obu
 pakietów, nie naprawione.
 
-**Luźny `patches/0001-Wyb-r-strony-kodowej-*.patch`** jest nieśledzony i w formacie
-sprzed konwencji katalogów. Od wyjątku dla `patches/` w `.gitignore` (`356b52de7`)
-`git status` na `build/tmz` pokazuje go jako `??`.
+**`rebase-patch.sh` eksportuje płaskie `patches/*.patch` do korzenia `patches/`**
+(`ixray-ttf-extended/tools/rebase-patch.sh`: `rm -f patches/*.patch`, potem
+`format-patch -o patches/`), wbrew konwencji `patches/<nazwa>/`. Uruchomiony na
+checkoucie `build/tmz` zostawi trzy nieśledzone pliki `??` (`feature/ttf-codepages` ma
+dziś trzy commity), tak jak zostawił usunięty 15.09 `0001-Wyb-r-strony-kodowej-*.patch`,
+bajtowo równy eksportowi `c90a56ba5`.
 
 **Lokalny `upstream/default` jest nieaktualny** (`6c793faee` kontra `612b165c9` na
 żywo, stan z 6 września). Po `git fetch upstream` baza deklarowana we wszystkich
@@ -110,5 +99,13 @@ wymaga liniowej. To świadome odstępstwo, ale warto o nim pamiętać przy ewent
 funkcji, część zwykłej kompilacji z `-Werror` przeciw prawdziwym nagłówkom. Funkcja
 `body()` jest skopiowana do każdego pliku testu.
 
-**`ixray-ui-params/tools/` jest pustym katalogiem**, mimo że dokumentacja odwołuje się
-do testów uruchamianych z katalogu silnika.
+**Połowa plików danych `ixray-ui-params` ma LF, choć `.gitattributes` wymaga CRLF.**
+9 z 18 plików `*.xml`/`*.ltx` ma w katalogu roboczym LF: sześć `mod_system_zzzz_uiparams_*.ltx`,
+`mod_actor_menu_item_16_uiparams.xml`, `mod_af_params_16_uiparams.xml` i
+`textures_descr/ui_actor_menu.xml` (`git ls-files --eol`: `i/lf w/lf attr/text eol=crlf`).
+LF w indeksie jest poprawne, bo git normalizuje przy commicie. Kopie w grze są z nimi
+bajtowo równe, więc też mają LF (policzone bajty `\r`, 15.09). `diff -rq` porównuje LF
+z LF i tego nie wykryje. Świeży klon albo checkout, który dotknie tych ścieżek, da CRLF,
+a instalacja przestanie być bajtowo zgodna z repo. Samo LF nie blokuje wczytania:
+nakładki odporności artefaktów nie dają błędów DLTX w logu z 15.09, a ikona `prop_tonnage`
+z tego deskryptora jest sprawdzona w grze.
