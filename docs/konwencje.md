@@ -66,3 +66,16 @@ Jeśli tylko jednego — zostaje u niego. Nie kopiuj między repozytoriami; link
 `README.md` w tym repozytorium **ładuje się w całości do kontekstu każdej sesji**
 w każdym repozytorium projektu. Trzymaj go poniżej ~100 linii; szczegóły dopisuj do
 dokumentów w `docs/`, które są otwierane dopiero wtedy, gdy zadanie ich wymaga.
+
+Routing jest dwupoziomowy:
+
+- **README** kieruje tylko do głównych domen zadania: „jeśli zadanie dotyczy X → przed pracą
+  przeczytaj Y", z wyzwalaczami, które agent rozpozna (nazwy plików, gałęzi, komunikaty
+  z logu). Ścieżki bezwzględne.
+- **Dokument domeny** kieruje dalej warunkowo — tam, gdzie przypadek szczególny występuje
+  („jeśli faktycznie integrujesz do `build/tmz`, przeczytaj też…"). Gołe listy „zobacz też"
+  nie mówią agentowi, kiedy czytać.
+
+Dokument zasługuje na osobny plik, gdy jakiś typ zadania potrzebuje go bez dokumentów
+sąsiednich. Procedury diagnostyczne leżą przy mechanice, której dotyczą, a nie
+w dokumencie przekrojowym.

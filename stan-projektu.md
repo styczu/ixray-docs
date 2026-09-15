@@ -97,3 +97,6 @@ Scalone do `build/tmz`, działa w grze.
 ## Rzeczy otwarte
 
 Lista rozjazdów i decyzji do podjęcia: [luzne-konce.md](luzne-konce.md).
+
+**Jeśli znalazłeś rozjazd albo podejrzewasz nowy błąd, najpierw sprawdź tę listę** — może
+być już znany i opisany. Nowy dopisz tam, nie naprawiaj po cichu.

@@ -90,7 +90,8 @@ Wykrywanie zależności ma dwie odmiany:
 ## Aktualizacja pakietu
 
 Przenieś commit na nową bazę w **osobnym, czystym checkoucie**, rozwiąż konflikty,
-uruchom testy i dopiero wtedy eksportuj ponownie:
+uruchom testy ([testy.md](testy.md) — m.in. jak wycelować test w inny checkout przez
+`IXRAY_TEST_ROOT`) i dopiero wtedy eksportuj ponownie:
 
 ```sh
 git format-patch -1 HEAD --stdout --full-index --no-signature > <pakiet>/0001-fix-<nazwa>.patch

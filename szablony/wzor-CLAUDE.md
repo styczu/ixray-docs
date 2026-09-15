@@ -6,6 +6,7 @@
 
 Gałęzie, wdrażanie, mechanika dodatków i konwencje są opisane w
 `/home/tmz/Projects/ixray-docs/README.md` — **przeczytaj to przed pierwszą zmianą.**
+Jego router wskazuje, który dokument szczegółowy otworzyć, zanim zaczniesz zadanie.
 
 Pod tym akapitem wstaw linię importu (bez bloku kodu, sama linia):
 

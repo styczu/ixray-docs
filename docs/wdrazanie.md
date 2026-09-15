@@ -14,14 +14,29 @@ cp -r /home/tmz/Projects/ixray-addons/<nazwa>/. \
 
 Alternatywnie zlinkować katalog, żeby się nie rozjeżdżał — dziś to osobne kopie.
 
+**`cp -r` nie usuwa plików przemianowanych ani usuniętych w repo.** Po zmianie nazwy
+`mod_items_hd_medkits.ltx` → `mod_items_hd_icons.ltx` w `ixray-hd-icons` stara kopia
+została w grze i nadpisywała apteczki teksturą z literówką.
+
 Potem restart gry. Zmiany w XML i LTX nie wymagają niczego więcej.
 
-Sprawdzenie, czy wdrożone jest to, co trzeba — porównaj plik w grze z roboczym albo
-poszukaj konkretnej wartości:
+Sprawdzenie, czy wdrożone jest to, co trzeba — porównaj cały katalog z roboczym:
+
+```sh
+diff -rq -x '.git*' -x docs -x src -x tools -x '*.md' <repo-dodatku> "<gra>/ixr_addons/<nazwa>"
+```
+
+Pusty wynik oznacza zgodność (stan z 15.09: wszystkie trzy dodatki projektu zgodne).
+
+albo poszukaj konkretnej wartości:
 
 ```sh
 grep -c 'cols_num="8"' "<gra>/ixr_addons/<nazwa>/configs/ui/actor_menu_16.xml"
 ```
+
+**Jeśli instalacja jest zgodna z repo, a w grze działa inaczej**, ten sam plik lub sekcję
+może nadpisywać inny dodatek — przeczytaj
+[dodatki.md](dodatki.md#kolizje-między-dodatkami--kontrola-przy-integracji).
 
 ## Silnik
 

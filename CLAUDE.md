@@ -10,12 +10,18 @@ repozytorium projektu**. Dlatego:
 
 - trzymaj go poniżej ~100 linii;
 - szczegóły dopisuj do `docs/<temat>.md`, nie do `README.md`;
-- nowy dokument w `docs/` dopisz do listy odsyłaczy w `README.md`.
+- README jest **routerem do głównych domen zadania**, nie spisem dokumentów. Nowy dokument
+  w `docs/` dostaje regułę w routerze tylko wtedy, gdy otwiera nową domenę. Jeśli jest
+  potrzebny dopiero w szczególnym przypadku wewnątrz domeny, odsyłacz warunkowy
+  („jeśli…, przeczytaj…") trafia do dokumentu nadrzędnego;
+- w routerze ścieżki bezwzględne (README jest importowany do innych repozytoriów),
+  w `docs/` odsyłacze względne;
+- każdy dokument ma być osiągalny z README przez router i dokumenty nadrzędne.
 
 ## Co gdzie
 
-- `README.md` — mapa, rejestr „dodatek ↔ gałąź", reguły kosztujące rundę.
-- `docs/` — rozwinięcia tematów, otwierane na żądanie.
+- `README.md` — mapa, router, rejestr „dodatek ↔ gałąź", reguły kosztujące rundę.
+- `docs/` — rozwinięcia tematów, otwierane według routera.
 - `stan-projektu.md` — co zrobione i co realnie jest w graniu. To dwie różne rzeczy
   i mają zostać rozdzielone.
 - `luzne-konce.md` — znalezione rozjazdy. Zapisujemy, nie naprawiamy po cichu.

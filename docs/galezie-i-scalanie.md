@@ -19,7 +19,11 @@ i kiedy weszło do buildu.
 
 ## Scalanie do `build/tmz`
 
-Po sprawdzeniu zmiany **w grze**, nie zaraz po zielonym CI:
+Po sprawdzeniu zmiany **w grze**, nie zaraz po zielonym CI.
+
+**Jeśli faktycznie integrujesz do `build/tmz`, przed scaleniem przeczytaj też listę kontrolną
+kolizji** w [dodatki.md](dodatki.md#kolizje-między-dodatkami--kontrola-przy-integracji) —
+dotyczy wszystkich dodatków w `<gra>/ixr_addons/`, także cudzych.
 
 ```sh
 git checkout build/tmz
@@ -33,6 +37,7 @@ git push origin build/tmz
   merge'y: „Oba workflow przeszły na `<sha>`: Build engine w Release i RelWithDebInfo
   oraz Non-Unity build w Debug, RelWithDebInfo i Release."
 - Jeśli sprawdzono w grze, napisz to wprost, razem z rozdzielczością.
+- Ogólne zasady opisów (język, nagłówek jako skutek) — [konwencje.md](konwencje.md#opisy-commitów).
 
 **`git merge -F -` nie czyta ze stdin** (inaczej niż `git commit -F -`) — kończy się
 `error: could not read file '-'`, przy czym wcześniejszy `checkout` już się wykonał

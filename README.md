@@ -2,7 +2,7 @@
 
 Modyfikacje S.T.A.L.K.E.R. Call of Pripyat na silniku IX-Ray. Praca jest rozbita na
 kilka repozytoriów: osobno silnik, osobno każdy dodatek. Ten plik spina je w całość
-i jest **jedynym dokumentem czytanym zawsze** — resztę otwieraj, gdy zadanie tego wymaga.
+i jest **jedynym dokumentem czytanym zawsze** — resztę otwieraj według routera niżej.
 
 ## Co gdzie leży
 
@@ -16,6 +16,29 @@ i jest **jedynym dokumentem czytanym zawsze** — resztę otwieraj, gdy zadanie 
 | Logi z gry | `<gra>/_appdata_ixray_/logs/` |
 | Ta dokumentacja | `/home/tmz/Projects/ixray-docs` |
 
+## Router: co przeczytać przed pracą
+
+Szczegóły nie ładują się same. **Jeśli zadanie pasuje do punktu poniżej, przeczytaj wskazany
+dokument przed pierwszą zmianą, nie po pierwszym błędzie.** Pasuje kilka punktów — przeczytaj
+każdy. Nie pasuje żaden — nie otwieraj niczego na zapas. Przypadki szczególne wewnątrz domeny
+wskazuje dopiero dokument domeny. Ścieżki są bezwzględne, bo ten plik jest importowany do
+innych repozytoriów.
+
+- **LTX / DLTX**: `mod_*.ltx`, `![sekcja]`, kolejność wczytywania LTX, prefiks `zzzz_`, `!!!DLTX ERROR` w logu → `/home/tmz/Projects/ixray-docs/docs/dltx.md`
+- **XML dodatku**: XMLOverride, `AsureXML`, `mod_*.xml`, podmiana całego pliku XML, `FAILED TO COMPILE` w logu → `/home/tmz/Projects/ixray-docs/docs/xml-override.md`
+- **Mechanika dodatków**: `addon.init`, `<gra>/ixr_addons`, kolejność montowania, ten sam plik w kilku dodatkach, tekstury i `textures_descr` → `/home/tmz/Projects/ixray-docs/docs/dodatki.md`
+- **Teksty i kodowanie**: `text/<język>/`, strony kodowe, CRLF, fonty, polskie/czeskie znaki, `! duplicate string table id`, `! Glyph not found` → `/home/tmz/Projects/ixray-docs/docs/teksty-i-kodowania.md`
+- **Gałęzie i CI**: `feature/*`, `codex/*`, merge do `build/tmz`, `default`, upstream, `gh run` → `/home/tmz/Projects/ixray-docs/docs/galezie-i-scalanie.md`
+- **Instalacja do gry**: build z CI, `install-build.sh`, kopiowanie dodatku do `<gra>/ixr_addons`, „poprawka nie działa w grze" → `/home/tmz/Projects/ixray-docs/docs/wdrazanie.md`
+- **Pakiety poprawek**: `patches/*`, `apply.py`, `patch.json`, `format-patch`, przenoszenie poprawki na inną wersję → `/home/tmz/Projects/ixray-docs/docs/pakiety-poprawek.md`
+- **Testy silnika**: `tests/*`, pisanie lub uruchamianie testu, `IXRAY_TEST_ROOT` → `/home/tmz/Projects/ixray-docs/docs/testy.md`
+- **Środowisko**: ścieżki spoza tabeli wyżej, logi gry, `fsgame.ltx`, magazyn buildów, Release vs RelWithDebInfo → `/home/tmz/Projects/ixray-docs/docs/srodowisko.md`
+- **Repozytoria**: zdalne, co zawiera który dodatek, zależności między komponentami, dodatki obce → `/home/tmz/Projects/ixray-docs/docs/repozytoria.md`
+- **Commit, komentarz w kodzie, pisanie dokumentacji** → `/home/tmz/Projects/ixray-docs/docs/konwencje.md`
+- **Stan projektu**: co działa, co jest w graniu, znane rozjazdy, planowanie kolejnego kroku → `/home/tmz/Projects/ixray-docs/stan-projektu.md`
+
+Temat jednego dodatku → `docs/` w jego własnym repozytorium. Tu są tylko rzeczy wspólne.
+
 ## Dodatek ↔ gałąź silnika
 
 Każdy dodatek to dane (XML, LTX, tekstury). Jeśli potrzebuje zmian w C++, mają one
@@ -28,23 +51,15 @@ silnik wymaga buildu z CI.
 | `ixray-ui-params` | `feature/ui-param-bars`, `codex/equipment-condition-time` | `equipment-condition-time`, `hud-motion-cache` | `tests/condition-ui/`, `tests/hud-motions/` |
 | `ixray-ttf-extended` | `feature/ttf-codepages` | — | — |
 
-**Przy każdej integracji w `build/tmz`** sprawdź też, czy dodatki w katalogu gry —
-również cudze — nie nadpisują sobie nawzajem plików i sekcji:
-[docs/dodatki.md](docs/dodatki.md#kolizje-między-dodatkami--kontrola-przy-integracji).
-
-Stan prac i to, co realnie siedzi w graniu: [stan-projektu.md](stan-projektu.md).
-
 ## Reguły, których złamanie kosztuje rundę
 
 1. **Zmiana w C++ nie działa w grze, dopóki nie przejdzie przez CI i instalację.**
    Edycja pliku źródłowego nie zmienia niczego w uruchomionej grze. Zanim uznasz
    poprawkę za niedziałającą, sprawdź, co siedzi w binarce:
    `strings "<gra>/bin/xrEngine.exe" | grep -m1 feature/` → pokazuje sha i gałąź.
-   Szczegóły: [docs/wdrazanie.md](docs/wdrazanie.md).
 
 2. **Zmiany nie-binarne idą do katalogu dodatku, nie do `gamedata/` w repo silnika.**
-   Dodatek nadpisuje `gamedata` po ścieżce względnej. Szczegóły:
-   [docs/dodatki.md](docs/dodatki.md).
+   Dodatek nadpisuje `gamedata` po ścieżce względnej.
 
 3. **Katalog roboczy dodatku to nie ten, z którego czyta gra.** Trzeba skopiować do
    `<gra>/ixr_addons/<nazwa>/`. To osobne kopie, nie dowiązania.
@@ -52,26 +67,10 @@ Stan prac i to, co realnie siedzi w graniu: [stan-projektu.md](stan-projektu.md)
 4. **Praca idzie na `feature/*`, a po sprawdzeniu w grze scala się do `build/tmz`**
    jawnym `merge --no-ff`. `build/tmz` to gałąź, z której powstaje build do grania.
    Gałęzi `default` nie dotykamy — jest lustrem upstreamu.
-   Szczegóły: [docs/galezie-i-scalanie.md](docs/galezie-i-scalanie.md).
 
-5. **Pliki gry mają CRLF.** Edytuj bajtowo (`read_bytes`/`write_bytes`); `read_text`
-   w Pythonie spłaszcza je do LF i diff rośnie z kilkunastu linii do kilkuset.
-   Kodowania tekstów: `pol`/`cze` = Windows-1250, `eng`/`rus` = Windows-1251.
+5. **Pliki gry mają CRLF i strony kodowe Windows** (`pol`/`cze` = 1250, `eng`/`rus` = 1251).
+   Edytuj bajtowo (`read_bytes`/`write_bytes`); `read_text` w Pythonie spłaszcza CRLF do LF
+   i diff rośnie z kilkunastu linii do kilkuset.
 
 6. **Język: dokumentacja i opisy commitów po polsku, komentarze w kodzie silnika po
-   angielsku.** Uzasadnienie i styl: [docs/konwencje.md](docs/konwencje.md).
-
-## Gdzie szukać dalej
-
-- [docs/srodowisko.md](docs/srodowisko.md) — pełna mapa katalogów, logi, co jest czym.
-- [docs/repozytoria.md](docs/repozytoria.md) — rejestr repozytoriów i zdalnych.
-- [docs/galezie-i-scalanie.md](docs/galezie-i-scalanie.md) — gałęzie, scalanie, upstream, CI.
-- [docs/wdrazanie.md](docs/wdrazanie.md) — build silnika, instalacja, wdrożenie dodatku.
-- [docs/dodatki.md](docs/dodatki.md) — `addon.init`, nadpisywanie, XMLOverride, DLTX, kodowania.
-- [docs/pakiety-poprawek.md](docs/pakiety-poprawek.md) — `patches/`, `apply.py`, zależności.
-- [docs/testy.md](docs/testy.md) — konwencja testów silnika.
-- [docs/konwencje.md](docs/konwencje.md) — język, commity, utrzymywanie dokumentacji.
-- [luzne-konce.md](luzne-konce.md) — znane rozjazdy czekające na decyzję.
-
-Dokumentacja szczegółowa poszczególnych dodatków zostaje w ich własnych repozytoriach,
-w `docs/`. Tu są tylko rzeczy wspólne.
+   angielsku.**
