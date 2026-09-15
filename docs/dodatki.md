@@ -24,6 +24,40 @@ w dodatku musi być kompletna — nie da się dowieźć samego fragmentu.
 Gdy ten sam plik dowozi kilka dodatków, o wyniku decyduje kolejność montowania.
 Nie jest ona nigdzie udokumentowana; kolejność przetwarzania widać w logu gry.
 
+## Kolizje między dodatkami — kontrola przy integracji
+
+Przy każdej integracji w `build/tmz` sprawdzamy **wszystkie** dodatki z
+`<gra>/ixr_addons/`, także cudze (`ixray-hd-hud`, `ixray-cnma`, paczki paradox, STCoP WP…).
+Kolizja nie daje błędu — po prostu jeden plik wygrywa po cichu.
+
+**Kolejność montowania jest alfabetyczna po nazwie katalogu** — widać ją na początku logu
+(`Processing <nazwa>\ addon completed!`). Pliki tekstów w `text/<język>/` też idą
+alfabetycznie (`FS_FileSet` to `xr_set`), a przy zdublowanym identyfikatorze wygrywa
+ostatni wczytany (`string_table.cpp`, w logu `! duplicate string table id`) — stąd prefiks
+`zz_` w nazwach plików tekstów dodatków.
+
+Co sprawdzić:
+
+1. **Te same ścieżki w kilku dodatkach** (podmiana całego pliku):
+   ```sh
+   cd "<gra>/ixr_addons" && find . -mindepth 2 -type f ! -name addon.init \
+     | sed -E 's#^\./([^/]+)/(.*)$#\L\2\E\t\1#' | sort \
+     | awk -F'\t' '{c[$1]++; l[$1]=l[$1]" "$2} END{for(k in c) if(c[k]>1) print k" :"l[k]}'
+   ```
+   Przy zdublowanym pliku porównaj obie kopie. Stan z 15.09: `configs/ui/actor_menu_16.xml`
+   dowożą `ixray-hd-hud` i `ixray-hd-icons`, a różnią się **wyłącznie** sześcioma siatkami
+   (`screen_cell_size`, `cols_num="8"`, `scroll_profile`). Wygrywa `hd-icons`; gdyby wygrał
+   `hd-hud`, ekwipunek wróci do 7 kolumn bez śladu w logu.
+2. **Te same sekcje LTX** nadpisywane (`![sekcja]`) przez więcej niż jeden dodatek oraz
+   błędy `!!!DLTX ERROR` w logu — wskazują plik `mod_*`, którego nadpisanie nie weszło.
+3. **XML oczekujący silnika:** `grep -a -c 'FAILED TO COMPILE' <log>` — każde trafienie to
+   zmienna wyrażenia, której zainstalowany silnik nie rejestruje (tak wyglądała regresja
+   panelu 14.09: 10 trafień `fltActor*ProtectionRatio`).
+4. **Instalacja zgodna z repo:** `diff -rq -x .git -x docs -x src -x tools -x '*.md'
+   <repo-dodatku> <gra>/ixr_addons/<nazwa>`. `cp -r` nie usuwa plików przemianowanych
+   w repo — w `ixray-hd-icons` został tak stary `mod_items_hd_medkits.ltx`, nadpisujący
+   apteczki teksturą z literówką.
+
 ## XMLOverride — lepsza droga dla XML
 
 Zamiast podmieniać cały plik, można dowieźć **tylko zmienione węzły**. Silnik szuka

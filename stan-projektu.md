@@ -1,6 +1,6 @@
 # Stan projektu
 
-Stan na **14 września 2026**. Odczytany z repozytoriów i katalogu gry, nie z pamięci.
+Stan na **15 września 2026**. Odczytany z repozytoriów i katalogu gry, nie z pamięci.
 
 > Ten dokument odpowiada na **dwa różne pytania**: co jest zrobione i co z tego
 > realnie siedzi w graniu. To nie to samo — część gotowej pracy czeka na scalenie.
@@ -9,28 +9,31 @@ Stan na **14 września 2026**. Odczytany z repozytoriów i katalogu gry, nie z p
 
 | Co | Stan |
 | --- | --- |
-| Silnik w `<gra>/bin/` | build commitu **`a22572dde`** (`build/tmz`), wariant RelWithDebInfo, zainstalowany 14.09 o 23:11 |
+| Silnik w `<gra>/bin/` | build commitu **`236edf3a7`** (dziś czubek `build/tmz`), wariant RelWithDebInfo, zainstalowany 15.09 o 07:44; binarka niesie nazwę gałęzi `build/tmz-fix-panel`, z której zbudowało ją CI przed przesunięciem `build/tmz` |
 | `ixray-hd-icons` | wdrożony, zgodny z katalogiem roboczym |
 | `ixray-ui-params` | wdrożony, zgodny (różni się tylko `src/`, czyli pliki robocze, których się nie wdraża) |
 | `ixray-ttf-extended` | wdrożony, zgodny |
 
-`build/tmz` jest **32 commity** ponad `upstream/default` (`6c793faee`).
+Sprawdzone w grze 15.09: użytkownik potwierdził, że wizualnie wszystko jest poprawne
+(ekwipunek i panel ochron). Log tego uruchomienia: `hash[236edf3a7]`, zero
+`FAILED TO COMPILE` (wcześniej 10) i brak nowych linii `!` względem ostatniego buildu
+samego panelu (`1506c06da`).
+
+`build/tmz` jest **62 commity** ponad `upstream/default` (`6c793faee`).
 
 ## Co jest zrobione, ale nie ma tego w graniu
 
-| Gałąź | Ponad `build/tmz` | Czego dotyczy |
-| --- | --- | --- |
-| `feature/ui-param-bars` | **+26 commitów** | nowsze prace nad ochronami: tooltipy ochron środowiskowych, ochrona bojowa, ikony ulepszeń |
-| `codex/equipment-condition-time` | +1 commit | naliczanie czasu efektów sprzętu |
+Nic z gałęzi feature. `feature/ui-param-bars` jest w całości scalona (merge `236edf3a7`),
+razem z dokumentami prozą, pakietami `equipment-condition-time` i `hud-motion-cache` oraz
+testami `tests/condition-ui/` i `tests/hud-motions/`.
 
-To jest najważniejsza rozbieżność w projekcie. Panel parametrów działa w grze, ale
-w wersji sprzed kilkunastu commitów. Razem z tymi commitami poza buildem zostają też
-dwa dokumenty prozą (`docs/protection-model.md`,
-`docs/environmental-protection-tooltips.md`), pakiety `equipment-condition-time`
-i `hud-motion-cache` oraz **wszystkie testy** `tests/condition-ui/` i `tests/hud-motions/`.
+`codex/equipment-condition-time` formalnie ma 1 commit poza `build/tmz`, ale jego treść
+weszła z `feature/ui-param-bars` (identyczny patch-id jak `e39632874`). Gałąź zostaje jako
+czysty eksport patcha.
 
-Praktyczny skutek: odwołania do tych plików z dokumentacji `ixray-ui-params` nie
-działają na `build/tmz` — trzeba przełączyć się na `feature/ui-param-bars`.
+**Skąd wzięła się regresja z 14.09:** do 13:50 grano na binarce zbudowanej wprost
+z `feature/ui-param-bars`, potem na buildach inventory i `build/tmz`, które nigdy nie
+dostały 27 nowszych commitów panelu. Merge inventory niczego nie cofnął.
 
 ## Zrobione, per dodatek
 
@@ -56,7 +59,7 @@ redesign slotów broni, hełmu, kombinezonu, detektora i pasa artefaktów.
 
 ### `ixray-ui-params` — panel parametrów postaci
 
-Największy i najdłużej prowadzony temat. Zrobione (część poza buildem, patrz wyżej):
+Największy i najdłużej prowadzony temat. Zrobione, scalone do `build/tmz` 15.09:
 
 - przebudowa panelu postaci: paski zdrowia, kondycji, sytości, długi pasek sytości,
   dopasowanie tekstury monitora, pozycje tekstów;

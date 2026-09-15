@@ -28,9 +28,9 @@ silnik wymaga buildu z CI.
 | `ixray-ui-params` | `feature/ui-param-bars`, `codex/equipment-condition-time` | `equipment-condition-time`, `hud-motion-cache` | `tests/condition-ui/`, `tests/hud-motions/` |
 | `ixray-ttf-extended` | `feature/ttf-codepages` | — | — |
 
-**Uwaga:** pakiety i testy `ixray-ui-params` (`equipment-condition-time`,
-`hud-motion-cache`, `tests/condition-ui/`, `tests/hud-motions/`) istnieją **tylko na
-gałęzi `feature/ui-param-bars`** — nie ma ich na `build/tmz`.
+**Przy każdej integracji w `build/tmz`** sprawdź też, czy dodatki w katalogu gry —
+również cudze — nie nadpisują sobie nawzajem plików i sekcji:
+[docs/dodatki.md](docs/dodatki.md#kolizje-między-dodatkami--kontrola-przy-integracji).
 
 Stan prac i to, co realnie siedzi w graniu: [stan-projektu.md](stan-projektu.md).
 
