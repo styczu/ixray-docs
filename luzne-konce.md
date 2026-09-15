@@ -98,14 +98,3 @@ wymaga liniowej. To świadome odstępstwo, ale warto o nim pamiętać przy ewent
 **Konwencja testów nie jest jednolita**: część używa ASan/UBSan i wyciągania ciał
 funkcji, część zwykłej kompilacji z `-Werror` przeciw prawdziwym nagłówkom. Funkcja
 `body()` jest skopiowana do każdego pliku testu.
-
-**Połowa plików danych `ixray-ui-params` ma LF, choć `.gitattributes` wymaga CRLF.**
-9 z 18 plików `*.xml`/`*.ltx` ma w katalogu roboczym LF: sześć `mod_system_zzzz_uiparams_*.ltx`,
-`mod_actor_menu_item_16_uiparams.xml`, `mod_af_params_16_uiparams.xml` i
-`textures_descr/ui_actor_menu.xml` (`git ls-files --eol`: `i/lf w/lf attr/text eol=crlf`).
-LF w indeksie jest poprawne, bo git normalizuje przy commicie. Kopie w grze są z nimi
-bajtowo równe, więc też mają LF (policzone bajty `\r`, 15.09). `diff -rq` porównuje LF
-z LF i tego nie wykryje. Świeży klon albo checkout, który dotknie tych ścieżek, da CRLF,
-a instalacja przestanie być bajtowo zgodna z repo. Samo LF nie blokuje wczytania:
-nakładki odporności artefaktów nie dają błędów DLTX w logu z 15.09, a ikona `prop_tonnage`
-z tego deskryptora jest sprawdzona w grze.
