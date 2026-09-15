@@ -105,6 +105,9 @@ Wykrywanie zależności ma dwie odmiany:
 - **Baza upstreamu się przesuwa.** `verified_upstream_base` odpowiada konkretnemu
   commitowi; po `git fetch upstream` patch trzeba sprawdzić na nowej bazie
   (`rebase-patch.sh` z `ixray-ttf-extended/tools/` robi to dla gałęzi fontów).
+  `feature/ttf-codepages` nie ma pakietu w `build/tmz:patches/`. Skrypt zapisuje więc
+  patche, po jednym na commit, do katalogu spoza repo silnika (`--out` albo `mktemp -d`),
+  a do `patches/` nic nie trafia.
 
 ## Gałąź źródłowa samodzielnego pakietu
 

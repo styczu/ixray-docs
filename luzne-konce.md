@@ -72,13 +72,6 @@ z gałęzi, jak wymaga zasada.
 przepisuje ich linie. Sprawdzone 15.09 na czystym `6c793faee`. Odnotowane w README obu
 pakietów, nie naprawione.
 
-**`rebase-patch.sh` eksportuje płaskie `patches/*.patch` do korzenia `patches/`**
-(`ixray-ttf-extended/tools/rebase-patch.sh`: `rm -f patches/*.patch`, potem
-`format-patch -o patches/`), wbrew konwencji `patches/<nazwa>/`. Uruchomiony na
-checkoucie `build/tmz` zostawi trzy nieśledzone pliki `??` (`feature/ttf-codepages` ma
-dziś trzy commity), tak jak zostawił usunięty 15.09 `0001-Wyb-r-strony-kodowej-*.patch`,
-bajtowo równy eksportowi `c90a56ba5`.
-
 **Lokalny `upstream/default` jest nieaktualny** (`6c793faee` kontra `612b165c9` na
 żywo, stan z 6 września). Po `git fetch upstream` baza deklarowana we wszystkich
 pakietach przestanie odpowiadać rzeczywistości. Refspec pobiera tylko `default`, więc
