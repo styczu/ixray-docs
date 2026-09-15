@@ -4,24 +4,6 @@ Rozjazdy znalezione przy spisywaniu dokumentacji 14 września 2026, uzupełnione
 15 września po integracji panelu z inventory. Każdy to osobna decyzja; rzeczy
 rozwiązane są z listy usuwane. Kolejność od najbardziej wpływowych.
 
-## Gałęzie
-
-**`origin/codex/tooltip-real-seconds`** to nieaktualna migawka bez lokalnego
-odpowiednika — leży na `origin` i nic z niej nie wynika.
-
-**`stash@{0}`** na `feature/ui-param-bars` (`wip-gi3`) to te same 3 linie `.gitignore`,
-które weszły commitem `ec3285d5a` — do usunięcia, niczego nie niesie.
-
-**`CLAUDE.md` w repozytorium silnika jest na `build/tmz` i `feature/ui-param-bars`,
-nie ma go na pięciu pozostałych gałęziach roboczych** (poza `default`, lustrem upstreamu,
-i scaloną `build/ci-release`). To decyzja, nie przeoczenie. Gałęzie źródłowe pakietów
-(`fix/equipment-condition-time` oraz łańcuch `fix/inventory-drop-cell` →
-`feature/inventory-drop-preview` → `feature/inventory-cell-grid`) stoją celowo na czystym
-upstreamie, żeby patche dało się czysto wyeksportować. Commit z dokumentacją zepsułby
-ten cel. `feature/ttf-codepages` jest w całości scalona, a nowa praca odgałęzia się
-od `build/tmz`, które plik ma. Gdyby wróciła do życia, trzeba tam przenieść
-commit `1e4108d0f`.
-
 ## Dokumentacja odwołująca się w próżnię
 
 **Notatka twierdzi, że jej kopia leży w zainstalowanym dodatku** — w całym

@@ -7,13 +7,14 @@
 | `default` | lustro `upstream/default`. **Nie commitujemy tu nic.** Nigdy nie rozjechała się z upstreamem. |
 | `build/tmz` | **gałąź integracyjna** — to z niej powstaje build, w który się gra |
 | `build/ci-release` | zmiany w konfiguracji CI; scalona do `build/tmz` |
-| `feature/<temat>` | pojedyncza zmiana w silniku, powiązana z jednym dodatkiem |
+| `feature/<temat>` | pojedyncza zmiana w silniku, powiązana z jednym dodatkiem. Część scalonych nadal jest gałęziami źródłowymi patchy: łańcuch inventory i `feature/ttf-codepages` |
 | `fix/<temat>` | gałąź źródłowa samodzielnego pakietu: jeden commit kodu z testami na czystym upstreamie, wypchnięty na `origin`. Sam pakiet `patches/<temat>/` leży na `build/tmz`. **Gałęzi nie scala się do `build/tmz`** — ta sama treść wchodzi tam przez `feature/*` |
 
 Nazewnictwo `feature/*` jest zgodne z `doc/branching-model.md` upstreamu. Prefiksy
 `build/*` i `fix/*` to nasze rozszerzenie. Prefiks `codex/*` jest historyczny i nowych
-gałęzi tak nie nazywamy; na `origin` została po nim tylko nieaktualna
-`codex/tooltip-real-seconds` ([luzne-konce.md](../luzne-konce.md)).
+gałęzi tak nie nazywamy. Na `origin` nie ma już gałęzi `codex/*`: ostatnią,
+`codex/tooltip-real-seconds`, usunięto 15 września 2026, bo w całości zawierała się
+w `build/tmz`.
 
 **Jeśli pracujesz na gałęzi `fix/*`** — przenosisz ją na nowy upstream albo eksportujesz
 z niej patch — przeczytaj
@@ -25,6 +26,14 @@ Ta gałąź ma zostać pojedynczym commitem.
 [pakiety-poprawek.md](pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory). To łańcuch
 gałęzi źródłowych pakietów, już scalony do `build/tmz`. Nie odgałęziaj od nich nowej pracy
 i nie scalaj ich ponownie. Zmiana w inventory idzie przez przebudowę łańcucha.
+
+**`CLAUDE.md` i `AGENTS.md` leżą tylko na `build/tmz` i `feature/ui-param-bars`.** Czyste
+gałęzie źródłowe patchy (`fix/equipment-condition-time`, łańcuch inventory,
+`feature/ttf-codepages`) stoją na upstreamie i celowo ich nie dostają. Commit
+z dokumentacją zanieczyściłby eksportowany łańcuch — np. `rebase-patch.sh`
+z `ixray-ttf-extended/tools/` eksportuje wszystko od `upstream/default`. Nową pracę
+odgałęziaj od `build/tmz`. Szczegóły:
+[pakiety-poprawek.md](pakiety-poprawek.md#gałąź-źródłowa-samodzielnego-pakietu).
 
 **Świadome odstępstwo:** upstream wymaga liniowej historii, a `build/tmz` jest oparta
 na merge'ach. To celowe — merge commit z opisem jest tu nośnikiem informacji o tym, co
