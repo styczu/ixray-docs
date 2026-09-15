@@ -63,6 +63,18 @@ Fonty TTF i obsługa stron kodowych dla polskiego i czeskiego.
 Narzędzia obsługujące cały projekt (`install-build.sh`, `addon-sync`) leżą
 w `ixray-docs/tools/`, nie tutaj. Opis użycia: [wdrazanie.md](wdrazanie.md).
 
+## Snapshoty obcych dodatków
+
+`/home/tmz/Projects/ixray-addons-readonly/` — jedno zbiorcze repozytorium z wybranymi
+plikami obcych dodatków, przechowywanymi wyłącznie do analizy.
+
+- Zdalne: `https://github.com/styczu/ixray-addons-readonly.git` (prywatne, od
+  15 września 2026).
+- Zawartość katalogów dodatków jest tylko do odczytu; zmienia się wyłącznie przez
+  świadomy import nowego snapshotu.
+- Snapshot może zawierać tylko podzbiór dodatku i nie jest źródłem do jego instalacji.
+- Pierwszy snapshot: `ixray-stcop-wp-outfits`, 20 plików konfiguracji strojów i ulepszeń.
+
 ## Dodatki obce
 
 W `<gra>/ixr_addons/` siedzi kilkanaście dodatków spoza tego projektu

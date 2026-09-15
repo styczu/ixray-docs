@@ -10,6 +10,7 @@ i jest **jedynym dokumentem czytanym zawsze** — resztę otwieraj według route
 | --- | --- |
 | Silnik (fork) | `/home/tmz/Projects/ixray-1.6-stcop` |
 | Dodatki | `/home/tmz/Projects/ixray-addons/<nazwa>` |
+| Snapshoty obcych dodatków | `/home/tmz/Projects/ixray-addons-readonly/<nazwa>` |
 | Magazyn buildów | `/home/tmz/Projects/ixray-addons/engine-bin/<sha>[-debug]` |
 | Gra | `/home/tmz/Games/Heroic/S.T.A.L.K.E.R. Call of Pripyat` |
 | Zainstalowane dodatki | `<gra>/ixr_addons/<nazwa>` |

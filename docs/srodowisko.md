@@ -6,6 +6,7 @@
 | --- | --- | --- |
 | Silnik (fork) | `/home/tmz/Projects/ixray-1.6-stcop` | repo git, remote `origin` = `styczu/ixray-1.6-stcop`, `upstream` = `ixray-team/ixray-1.6-stcop` |
 | Dodatki | `/home/tmz/Projects/ixray-addons/` | katalog zbiorczy, sam nie jest repozytorium |
+| Snapshoty obcych dodatków | `/home/tmz/Projects/ixray-addons-readonly/` | jedno prywatne repo, pliki referencyjne tylko do odczytu |
 | Magazyn buildów | `/home/tmz/Projects/ixray-addons/engine-bin/` | ~2,8 GB, nie jest repozytorium |
 | Ta dokumentacja | `/home/tmz/Projects/ixray-docs` | repo git, remote prywatny |
 
