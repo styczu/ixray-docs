@@ -9,7 +9,7 @@ Stan na **15 września 2026**. Odczytany z repozytoriów i katalogu gry, nie z p
 
 | Co | Stan |
 | --- | --- |
-| Silnik w `<gra>/bin/` | build commitu **`236edf3a7`** (dziś czubek `build/tmz`), wariant RelWithDebInfo, zainstalowany 15.09 o 07:44; binarka niesie nazwę gałęzi `build/tmz-fix-panel`, z której zbudowało ją CI przed przesunięciem `build/tmz` |
+| Silnik w `<gra>/bin/` | build commitu **`236edf3a7`** (ostatni commit `build/tmz` ze zmianami kodu; nowszy `7382923aa` zmienia tylko metadane pakietu `equipment-condition-time`, bez `src/`), wariant RelWithDebInfo, zainstalowany 15.09 o 07:44; binarka niesie nazwę gałęzi `build/tmz-fix-panel`, z której zbudowało ją CI przed przesunięciem `build/tmz` |
 | `ixray-hd-icons` | wdrożony, zgodny z katalogiem roboczym |
 | `ixray-ui-params` | wdrożony, zgodny (różni się tylko `src/`, czyli pliki robocze, których się nie wdraża) |
 | `ixray-ttf-extended` | wdrożony, zgodny |
@@ -19,7 +19,7 @@ Sprawdzone w grze 15.09: użytkownik potwierdził, że wizualnie wszystko jest p
 `FAILED TO COMPILE` (wcześniej 10) i brak nowych linii `!` względem ostatniego buildu
 samego panelu (`1506c06da`).
 
-`build/tmz` jest **62 commity** ponad `upstream/default` (`6c793faee`).
+`build/tmz` jest **63 commity** ponad `upstream/default` (`6c793faee`).
 
 ## Co jest zrobione, ale nie ma tego w graniu
 
@@ -27,9 +27,11 @@ Nic z gałęzi feature. `feature/ui-param-bars` jest w całości scalona (merge 
 razem z dokumentami prozą, pakietami `equipment-condition-time` i `hud-motion-cache` oraz
 testami `tests/condition-ui/` i `tests/hud-motions/`.
 
-`codex/equipment-condition-time` formalnie ma 1 commit poza `build/tmz`, ale jego treść
-weszła z `feature/ui-param-bars` (identyczny patch-id jak `e39632874`). Gałąź zostaje jako
-czysty eksport patcha.
+`fix/equipment-condition-time` to utrzymywana gałąź źródłowa samodzielnego patcha
+`equipment-condition-time`, wypchnięta na `origin` 15.09. Formalnie ma 1 commit poza
+`build/tmz`, ale jego treść weszła z `feature/ui-param-bars` (identyczny patch-id jak
+`e39632874`), więc nie czeka na scalenie i nie scala się jej. Zasady:
+[docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#gałąź-źródłowa-samodzielnego-pakietu).
 
 **Skąd wzięła się regresja z 14.09:** do 13:50 grano na binarce zbudowanej wprost
 z `feature/ui-param-bars`, potem na buildach inventory i `build/tmz`, które nigdy nie

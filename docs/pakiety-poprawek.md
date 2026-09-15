@@ -76,7 +76,8 @@ Wykrywanie zależności ma dwie odmiany:
 
 - **`.gitignore` łapie `patches/`.** Reguła `patch*/` (odziedziczona z upstreamu)
   powoduje, że nowe pliki w pakietach są niewidoczne dla `git status` i wymagają
-  `git add -f`. Pliki już śledzone działają normalnie.
+  `git add -f`. Zmiany w plikach już śledzonych `git status` pokazuje, ale
+  `git add <ścieżka>` też odmawia („paths are ignored") — użyj `git add -u -- <pakiet>`.
 - **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
   `verified_upstream_base` / `original_parent` / `original_commits`;
   `equipment-condition-time` używa `upstream_base` / `branch` / `commit` / `files`.
@@ -86,6 +87,26 @@ Wykrywanie zależności ma dwie odmiany:
 - **Baza upstreamu się przesuwa.** `verified_upstream_base` odpowiada konkretnemu
   commitowi; po `git fetch upstream` patch trzeba sprawdzić na nowej bazie
   (`rebase-patch.sh` z `ixray-ttf-extended/tools/` robi to dla gałęzi fontów).
+
+## Gałąź źródłowa samodzielnego pakietu
+
+Pakiet `equipment-condition-time` ma w forku **utrzymywaną gałąź źródłową
+`fix/equipment-condition-time`**, wypchniętą na `origin`. Z niej powstaje patch i na niej
+przenosi się poprawkę na przyszłe wersje upstreamu. Do 15 września 2026 nazywała się
+`codex/equipment-condition-time` — ta nazwa została w kopii pakietu na scalonej
+`feature/ui-param-bars`. Inne pakiety takiej gałęzi dziś nie mają.
+
+- Gałąź to **dokładnie jeden commit poprawki na czystym upstreamie** (dziś `0e76d116e`
+  na `6c793faee`). Nie dokładaj tam pakietu, dokumentacji ani `CLAUDE.md` — drugi commit
+  psuje eksport `format-patch -1`.
+- `patch.json` wskazuje ją w polach `branch` i `commit`.
+- **Nie scala się jej do `build/tmz`.** Ta sama poprawka weszła tam z
+  `feature/ui-param-bars` jako `e39632874`. `git log build/tmz..fix/equipment-condition-time`
+  pokazuje więc jeden commit i to stan zamierzony, nie zaległość. Równoważność potwierdza
+  `git cherry build/tmz fix/equipment-condition-time` — znak `-` przy commicie.
+- Przy nowym upstreamie przenieś commit wg [aktualizacji pakietu](#aktualizacja-pakietu),
+  zaktualizuj w `patch.json` pola `upstream_base`, `commit` i `sha256`, a gałąź wypchnij
+  ponownie. Rebase przepisuje historię, więc push wymaga `--force-with-lease`.
 
 ## Aktualizacja pakietu
 

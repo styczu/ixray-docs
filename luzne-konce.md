@@ -6,11 +6,6 @@ rozwiązane są z listy usuwane. Kolejność od najbardziej wpływowych.
 
 ## Gałęzie
 
-**`codex/equipment-condition-time` jest 1 commit przed `build/tmz`** i nie ma go na
-`origin`. Gałąź trzymana celowo jako pojedynczy commit na czystym upstreamie,
-do czystego eksportu patcha. Jego treść jest już w `build/tmz` przez
-`feature/ui-param-bars` (identyczny patch-id z `e39632874`).
-
 **`feature/inventory-cell-grid` odgałęziono od `build/tmz`, nie od `default`.** Niesie
 przez to stare merge'e panelu, fontów i CI. Nie szkodzi, dopóki nie dotyka plików innych
 gałęzi, ale eksport patcha z tej gałęzi wymaga odcięcia tej historii.
@@ -23,7 +18,7 @@ które weszły commitem `ec3285d5a` — do usunięcia, niczego nie niesie.
 
 **`CLAUDE.md` w repozytorium silnika jest na `build/tmz` i `feature/ui-param-bars`,
 nie ma go na trzech pozostałych gałęziach.** To decyzja, nie przeoczenie:
-`codex/equipment-condition-time` jest celowo trzymana jako pojedynczy commit na czystym
+`fix/equipment-condition-time` jest celowo trzymana jako pojedynczy commit na czystym
 upstreamie, żeby patch dało się czysto wyeksportować — dodatkowy commit z dokumentacją
 zepsułby ten cel. `feature/inventory-cell-grid` i `feature/ttf-codepages` są w całości
 scalone, a nowa praca odgałęzia się od `build/tmz`, które plik ma. Gdyby któraś z nich

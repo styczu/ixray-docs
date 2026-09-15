@@ -28,7 +28,7 @@ innych repozytoriów.
 - **XML dodatku**: XMLOverride, `AsureXML`, `mod_*.xml`, podmiana całego pliku XML, `FAILED TO COMPILE` w logu → `/home/tmz/Projects/ixray-docs/docs/xml-override.md`
 - **Mechanika dodatków**: `addon.init`, `<gra>/ixr_addons`, kolejność montowania, ten sam plik w kilku dodatkach, tekstury i `textures_descr` → `/home/tmz/Projects/ixray-docs/docs/dodatki.md`
 - **Teksty i kodowanie**: `text/<język>/`, strony kodowe, CRLF, fonty, polskie/czeskie znaki, `! duplicate string table id`, `! Glyph not found` → `/home/tmz/Projects/ixray-docs/docs/teksty-i-kodowania.md`
-- **Gałęzie i CI**: `feature/*`, `codex/*`, merge do `build/tmz`, `default`, upstream, `gh run` → `/home/tmz/Projects/ixray-docs/docs/galezie-i-scalanie.md`
+- **Gałęzie i CI**: `feature/*`, `fix/*`, merge do `build/tmz`, `default`, upstream, `gh run` → `/home/tmz/Projects/ixray-docs/docs/galezie-i-scalanie.md`
 - **Instalacja do gry**: build z CI, `install-build.sh`, kopiowanie dodatku do `<gra>/ixr_addons`, „poprawka nie działa w grze" → `/home/tmz/Projects/ixray-docs/docs/wdrazanie.md`
 - **Pakiety poprawek**: `patches/*`, `apply.py`, `patch.json`, `format-patch`, przenoszenie poprawki na inną wersję → `/home/tmz/Projects/ixray-docs/docs/pakiety-poprawek.md`
 - **Testy silnika**: `tests/*`, pisanie lub uruchamianie testu, `IXRAY_TEST_ROOT` → `/home/tmz/Projects/ixray-docs/docs/testy.md`
@@ -48,7 +48,7 @@ silnik wymaga buildu z CI.
 | Dodatek | Gałąź silnika | Pakiet w `patches/` | Testy |
 | --- | --- | --- | --- |
 | `ixray-hd-icons` | `feature/inventory-cell-grid`, `feature/inventory-drop-cell` | `inventory-cell-grid`, `inventory-drop-cell`, `inventory-drop-preview` | `tests/inventory-drop/` |
-| `ixray-ui-params` | `feature/ui-param-bars`, `codex/equipment-condition-time` | `equipment-condition-time`, `hud-motion-cache` | `tests/condition-ui/`, `tests/hud-motions/` |
+| `ixray-ui-params` | `feature/ui-param-bars`, `fix/equipment-condition-time` | `equipment-condition-time`, `hud-motion-cache` | `tests/condition-ui/`, `tests/hud-motions/` |
 | `ixray-ttf-extended` | `feature/ttf-codepages` | — | — |
 
 ## Reguły, których złamanie kosztuje rundę

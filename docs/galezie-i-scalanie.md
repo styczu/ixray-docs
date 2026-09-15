@@ -8,10 +8,17 @@
 | `build/tmz` | **gałąź integracyjna** — to z niej powstaje build, w który się gra |
 | `build/ci-release` | zmiany w konfiguracji CI; scalona do `build/tmz` |
 | `feature/<temat>` | pojedyncza zmiana w silniku, powiązana z jednym dodatkiem |
-| `codex/<temat>` | to samo, ale prace prowadzone Codexem |
+| `fix/<temat>` | poprawka silnika utrzymywana jako samodzielny pakiet `patches/<temat>/`: jeden commit na czystym upstreamie, wypchnięty na `origin`. **Nie scala się jej do `build/tmz`** — ta sama treść wchodzi tam przez `feature/*` |
 
 Nazewnictwo `feature/*` jest zgodne z `doc/branching-model.md` upstreamu. Prefiksy
-`build/*` i `codex/*` to nasze rozszerzenie.
+`build/*` i `fix/*` to nasze rozszerzenie. Prefiks `codex/*` jest historyczny i nowych
+gałęzi tak nie nazywamy; na `origin` została po nim tylko nieaktualna
+`codex/tooltip-real-seconds` ([luzne-konce.md](../luzne-konce.md)).
+
+**Jeśli pracujesz na gałęzi `fix/*`** — przenosisz ją na nowy upstream albo eksportujesz
+z niej patch — przeczytaj
+[pakiety-poprawek.md](pakiety-poprawek.md#gałąź-źródłowa-samodzielnego-pakietu).
+Ta gałąź ma zostać pojedynczym commitem.
 
 **Świadome odstępstwo:** upstream wymaga liniowej historii, a `build/tmz` jest oparta
 na merge'ach. To celowe — merge commit z opisem jest tu nośnikiem informacji o tym, co

@@ -40,7 +40,7 @@ Panel parametrów postaci: paski, ochrony, regeneracja, tooltipy.
 - Zdalne: `https://github.com/styczu/ixray-ui-params.git`
 - Zawiera: XML-e panelu przez **XMLOverride** (`mod_*_uiparams.xml`), pliki DLTX
   `mod_system_*`, teksty w czterech językach, tekstury.
-- Gałęzie silnika: `feature/ui-param-bars` (duża), `codex/equipment-condition-time` (jeden commit).
+- Gałęzie silnika: `feature/ui-param-bars` (duża), `fix/equipment-condition-time` (jeden commit, źródło pakietu `equipment-condition-time`).
 - Pakiety: `equipment-condition-time`, `hud-motion-cache`.
 - Testy: `tests/condition-ui/`, `tests/hud-motions/`.
 - Najbogatsza dokumentacja własna — `docs/` z kilkunastoma plikami.
