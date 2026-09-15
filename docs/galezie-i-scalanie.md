@@ -8,7 +8,7 @@
 | `build/tmz` | **gałąź integracyjna** — to z niej powstaje build, w który się gra |
 | `build/ci-release` | zmiany w konfiguracji CI; scalona do `build/tmz` |
 | `feature/<temat>` | pojedyncza zmiana w silniku, powiązana z jednym dodatkiem |
-| `fix/<temat>` | poprawka silnika utrzymywana jako samodzielny pakiet `patches/<temat>/`: jeden commit na czystym upstreamie, wypchnięty na `origin`. **Nie scala się jej do `build/tmz`** — ta sama treść wchodzi tam przez `feature/*` |
+| `fix/<temat>` | gałąź źródłowa samodzielnego pakietu: jeden commit kodu z testami na czystym upstreamie, wypchnięty na `origin`. Sam pakiet `patches/<temat>/` leży na `build/tmz`. **Gałęzi nie scala się do `build/tmz`** — ta sama treść wchodzi tam przez `feature/*` |
 
 Nazewnictwo `feature/*` jest zgodne z `doc/branching-model.md` upstreamu. Prefiksy
 `build/*` i `fix/*` to nasze rozszerzenie. Prefiks `codex/*` jest historyczny i nowych

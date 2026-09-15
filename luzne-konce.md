@@ -80,10 +80,6 @@ mechaniczna” zamiast „Tłumienie uderzeń”) — zamierzone, ale sześć os
 
 ## Silnik i pakiety
 
-**`.gitignore:60` zawiera `patch*/`, co łapie `patches/`.** Nowe pliki w pakietach są
-niewidoczne dla `git status` i wymagają `git add -f`. Reguła odziedziczona z upstreamu,
-kolidująca z własną konwencją.
-
 **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
 `verified_upstream_base` / `original_parent` / `original_commits` (drop-* mają
 `original_integrated_commit`, cell-grid `original_commits` i `integrated_commits`),
@@ -93,14 +89,15 @@ od 15.09 także `branch`; `equipment-condition-time` używa
 **`apply.py` istnieje w pięciu niemal identycznych kopiach** i **nigdy nie czyta
 `patch.json`** — `sha256` i `verified_upstream_base` to metadane bez egzekucji.
 
-**`build/tmz` niesie nieaktualne kopie pakietów inventory.** Aktualne leżą od 15.09 na
-czubku `feature/inventory-cell-grid` (`ea5103d0e`). Kopia w `build/tmz` jest starsza:
-- `inventory-cell-grid` zna tylko `28424e0f3` i `e9fb81e26`, bez martwego paska i fallbacku
-  profilu, a README opisuje XML w `gamedata`;
-- drop-* mają dawny format eksportu i inne `sha256`.
+**Na czubku `feature/inventory-cell-grid` został commit pakietów `ea5103d0e`**, wbrew
+zasadzie „gałąź źródłowa = kod, `build/tmz:patches/` = pakiety". Jego treść jest 1:1 na
+`build/tmz` (`5c3e60bfd`). Gałęzi celowo nie przepisano; commit pomija się przy najbliższej
+przebudowie łańcucha. Szczegóły:
+[docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory).
 
-`build/tmz` celowo zostawiono nietknięte. Pakiet biorący się z `build/tmz` jest niekompletny.
-Szczegóły: [docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory).
+**`hud-motion-cache` nie ma własnej gałęzi źródłowej.** `patch.json` zna tylko
+`original_integrated_commit` i `original_parent`. Pakietu nie da się więc wygenerować
+z gałęzi, jak wymaga zasada.
 
 **`apply.py` pakietów `inventory-drop-*` nie rozpoznaje własnej poprawki po nałożeniu
 `inventory-cell-grid`.** Zwraca 1 (drop-cell) albo 2 (drop-preview) zamiast 0, bo cell-grid
@@ -108,7 +105,8 @@ przepisuje ich linie. Sprawdzone 15.09 na czystym `6c793faee`. Odnotowane w READ
 pakietów, nie naprawione.
 
 **Luźny `patches/0001-Wyb-r-strony-kodowej-*.patch`** jest nieśledzony i w formacie
-sprzed konwencji katalogów.
+sprzed konwencji katalogów. Od wyjątku dla `patches/` w `.gitignore` (`356b52de7`)
+`git status` na `build/tmz` pokazuje go jako `??`.
 
 **Lokalny `upstream/default` jest nieaktualny** (`6c793faee` kontra `612b165c9` na
 żywo, stan z 6 września). Po `git fetch upstream` baza deklarowana we wszystkich

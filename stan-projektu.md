@@ -37,8 +37,8 @@ testami `tests/condition-ui/` i `tests/hud-motions/`.
 `fix/inventory-drop-cell` (`36e469d8f`) → `feature/inventory-drop-preview` (`15e6b828d`) →
 `feature/inventory-cell-grid` (`ea5103d0e`). Wypchnięty na `origin`, a dawną
 `feature/inventory-drop-cell` usunięto. Nic tu nie czeka na scalenie: kod jest identyczny
-z tym w `build/tmz`, a jedyną nową treścią są zregenerowane pakiety na czubku.
-`build/tmz` i binarka w grze się nie zmieniły.
+z tym w `build/tmz`. Zregenerowane pakiety z czubka (`ea5103d0e`) skopiowano 1:1 na `build/tmz`
+(`5c3e60bfd`), gdzie od 15.09 utrzymuje się wszystkie pakiety. Binarka w grze się nie zmieniła.
 - Sprawdzone: wszystkie testy `tests/inventory-drop/` na każdym commicie łańcucha
   i nałożenie trzech pakietów przez `apply.py` na czystym `6c793faee`.
 - CI zielone na `02915a7da` (kod) i na `ea5103d0e` (kod + pakiety).

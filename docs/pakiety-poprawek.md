@@ -3,6 +3,17 @@
 Poprawka silnika żyje w dwóch postaciach: jako gałąź w forku (do pracy) i jako
 **samodzielny pakiet** w `patches/<nazwa>/` (do przeniesienia na inną wersję IX-Ray).
 
+Zasada od 15 września 2026:
+
+| Gdzie | Co |
+| --- | --- |
+| gałąź źródłowa `fix/*` / `feature/*` | kod poprawki i jej testy, nic więcej |
+| `build/tmz:patches/<nazwa>/` | przenośne artefakty pakietów, wygenerowane z gałęzi źródłowej |
+
+Pakiet zmienia się więc commitem na `build/tmz`, a nie na gałęzi źródłowej. `.gitignore`
+na `build/tmz` wyłącza `patches/` z upstreamowej reguły `patch*/`, więc nowe i zmienione
+pliki pakietów widać w `git status` i dodaje się je zwykłym `git add`.
+
 ## Zawartość pakietu
 
 | Plik | Rola |
@@ -74,10 +85,16 @@ Wykrywanie zależności ma dwie odmiany:
 
 ## Pułapki
 
-- **`.gitignore` łapie `patches/`.** Reguła `patch*/` (odziedziczona z upstreamu)
-  powoduje, że nowe pliki w pakietach są niewidoczne dla `git status` i wymagają
-  `git add -f`. Zmiany w plikach już śledzonych `git status` pokazuje, ale
-  `git add <ścieżka>` też odmawia („paths are ignored") — użyj `git add -u -- <pakiet>`.
+- **`patches/` jest jawnie wyłączone z reguły `patch*/`.** Upstreamowy `.gitignore` ignoruje
+  tymczasowe katalogi `patch*/`, co łapało też `patches/`. Na `build/tmz` od `356b52de7`
+  zaraz po tej regule stoją `!patches/` i `!patches/**`. `patch_tmp/` i podobne dalej są
+  ignorowane (`git check-ignore -v patch_tmp/` → `.gitignore:60:patch*/`). Wyjątek obejmuje
+  całe poddrzewo, więc wcześniejsze reguły (`*.log`, `build*/`, `bin/`, `temp/`…) nie
+  działają wewnątrz `patches/` i nie zostawiaj tam plików roboczych. Gałęzie źródłowe stoją
+  na czystym upstreamie i wyjątku nie mają. Nie potrzebują go, bo pakietów nie niosą
+  (wyjątkiem jest pozostałość `ea5103d0e`, niżej).
+  Sprawdzając plik już śledzony, dodaj `git check-ignore -v --no-index`. Bez tej opcji
+  polecenie pomija pliki śledzone i milczy także wtedy, gdy reguła je łapie.
 - **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
   `verified_upstream_base` / `original_parent` / `original_commits` (od 15.09 także `branch`);
   `equipment-condition-time` używa `upstream_base` / `branch` / `commit` / `files`.
@@ -106,8 +123,9 @@ przenosi się poprawkę na przyszłe wersje upstreamu. Do 15 września 2026 nazy
   pokazuje więc jeden commit i to stan zamierzony, nie zaległość. Równoważność potwierdza
   `git cherry build/tmz fix/equipment-condition-time` — znak `-` przy commicie.
 - Przy nowym upstreamie przenieś commit wg [aktualizacji pakietu](#aktualizacja-pakietu),
-  zaktualizuj w `patch.json` pola `upstream_base`, `commit` i `sha256`, a gałąź wypchnij
-  ponownie. Rebase przepisuje historię, więc push wymaga `--force-with-lease`.
+  a gałąź wypchnij ponownie. Rebase przepisuje historię, więc push wymaga `--force-with-lease`.
+  Nowy patch i pola `upstream_base`, `commit` i `sha256` w `patch.json` trafiają do
+  `patches/equipment-condition-time/` na `build/tmz`.
 
 ## Łańcuch gałęzi źródłowych inventory
 
@@ -121,23 +139,26 @@ default 6c793faee
  └ 36e469d8f                                    ← fix/inventory-drop-cell
    └ 15e6b828d                                  ← feature/inventory-drop-preview
      └ 60564a6bf fe243d080 2b665a2b0 02915a7da    kod inventory-cell-grid
-       └ ea5103d0e  pakiety wszystkich trzech   ← feature/inventory-cell-grid
+       └ ea5103d0e  pakiety, pozostałość        ← feature/inventory-cell-grid
 ```
 
 - Każda gałąź niesie tylko swój kod z testami i gałęzie poprzednie: bez merge'y, bez
   `CLAUDE.md`, bez zmian w `gamedata`. `fix/inventory-drop-cell` to jeden commit na czystym
   upstreamie, jak `fix/equipment-condition-time`.
-- **Pakiety leżą w jednym commicie na czubku `feature/inventory-cell-grid`**, bo i tak
-  muszą być katalogami obok siebie. Pierwsze dwie gałęzie to sam kod.
-- Eksport z gałęzi:
+- **`ea5103d0e` z pakietami na czubku `feature/inventory-cell-grid` jest pozostałością sprzed
+  zasady „gałąź = kod".** Jego treść leży 1:1 na `build/tmz` od `5c3e60bfd` i tam pakiety
+  się zmienia. Gałęzi nie przepisano tylko po to, żeby go usunąć. Przy najbliższej
+  przebudowie łańcucha ten commit się pomija.
+- Eksport z gałęzi, uruchamiany w katalogu głównym checkoutu `build/tmz`:
   ```sh
   F="--stdout --full-index --no-signature"
-  git format-patch $F -1 fix/inventory-drop-cell > inventory-drop-cell/0001-fix-inventory-drop-cell.patch
-  git format-patch $F fix/inventory-drop-cell..feature/inventory-drop-preview > inventory-drop-preview/0001-fix-inventory-drop-preview.patch
-  git format-patch $F feature/inventory-drop-preview..feature/inventory-cell-grid -- src tests > inventory-cell-grid/0001-fix-inventory-cell-grid.patch
+  git format-patch $F -1 fix/inventory-drop-cell > patches/inventory-drop-cell/0001-fix-inventory-drop-cell.patch
+  git format-patch $F fix/inventory-drop-cell..feature/inventory-drop-preview > patches/inventory-drop-preview/0001-fix-inventory-drop-preview.patch
+  git format-patch $F feature/inventory-drop-preview..feature/inventory-cell-grid -- src tests > patches/inventory-cell-grid/0001-fix-inventory-cell-grid.patch
   ```
-  `-- src tests` pomija commit z pakietami. Gdyby kod cell-grid zaczął ruszać coś poza tymi
-  katalogami, listę trzeba rozszerzyć, bo inaczej patch po cichu to zgubi.
+  `-- src tests` ogranicza patch do kodu i testów, a dziś pomija też `ea5103d0e`. Gdyby kod
+  cell-grid zaczął ruszać coś poza tymi katalogami, listę trzeba rozszerzyć, bo inaczej patch
+  po cichu to zgubi.
 - `patch.json` wskazuje gałąź w `branch`. W cell-grid `original_commits` to SHA na gałęzi,
   a `integrated_commits` to odpowiedniki w `build/tmz`.
 - **Nie scala się ich do `build/tmz`.** Treść weszła tam dawnymi merge'ami `cc2b71d18`,
@@ -146,16 +167,15 @@ default 6c793faee
     puste, bo to te same commity;
   - `git cherry build/tmz feature/inventory-cell-grid` daje `- + + - +`. Środkowe `+` to
     `fe243d080` i `2b665a2b0`, które od `e9fb81e26` i `8c031bfb9` różnią się wyłącznie
-    wyciętym dodaniem i cofnięciem `screen_cell_size` w `gamedata`. Ostatni `+` to commit
-    pakietów.
+    wyciętym dodaniem i cofnięciem `screen_cell_size` w `gamedata`. Ostatni `+` to
+    `ea5103d0e`. Na `build/tmz` te same pliki weszły commitem `5c3e60bfd`, który podmienia
+    starsze kopie, więc patch-id jest inny.
 
   Równoważność kodu:
   ```sh
   git diff build/tmz feature/inventory-cell-grid -- $(git diff --name-only default feature/inventory-cell-grid -- src tests)
   ```
   → puste.
-- **`build/tmz` niesie starszą kopię pakietów**: cell-grid z dwoma commitami i XML-em
-  w `gamedata`, drop-* z dawnym formatem eksportu. Aktualne są na `feature/inventory-cell-grid`.
 - **`apply.py` pakietów drop-* nie rozpoznaje własnej poprawki po nałożeniu cell-grid**
   (kody 1 i 2 zamiast 0), bo cell-grid przepisuje ich linie. Stan takiego repozytorium
   zgłasza dopiero `apply.py` pakietu cell-grid.
@@ -169,11 +189,13 @@ default 6c793faee
 
 1. `git rebase --update-refs --onto upstream/default <verified_upstream_base> feature/inventory-cell-grid`
    przesuwa wszystkie trzy gałęzie naraz.
-2. Commit pakietów przejdzie bez konfliktu, ale ze starymi patchami. Wygeneruj je
-   poleceniami wyżej, zaktualizuj `patch.json` (baza, commity, `sha256`) i README,
-   po czym popraw ten commit (`--amend`, bo jest na czubku).
-3. Uruchom testy na każdym commicie łańcucha i macierz `apply.py` na czystym nowym upstreamie.
-4. Wypchnij trzy gałęzie z `--force-with-lease=<ref>:<stary sha>`.
+2. Jednorazowo, dopóki na czubku leży pozostałość `ea5103d0e`, usuń jej przeniesioną kopię.
+   `git show --stat HEAD` ma pokazać wyłącznie `patches/`, potem `git reset --hard HEAD~1`.
+3. W checkoucie `build/tmz` wygeneruj patche poleceniami wyżej, zaktualizuj `patch.json`
+   (baza, commity, `sha256`) i README pakietów, po czym zrób commit na `build/tmz`.
+4. Uruchom testy na każdym commicie łańcucha i macierz `apply.py` z pakietów `build/tmz`
+   na czystym nowym upstreamie.
+5. Wypchnij trzy gałęzie z `--force-with-lease=<ref>:<stary sha>`, a `build/tmz` zwykłym pushem.
 
 ## Aktualizacja pakietu
 
@@ -182,7 +204,8 @@ uruchom testy ([testy.md](testy.md) — m.in. jak wycelować test w inny checkou
 `IXRAY_TEST_ROOT`) i dopiero wtedy eksportuj ponownie:
 
 ```sh
-git format-patch -1 HEAD --stdout --full-index --no-signature > <pakiet>/0001-fix-<nazwa>.patch
+git format-patch -1 HEAD --stdout --full-index --no-signature > <checkout build/tmz>/patches/<pakiet>/0001-fix-<nazwa>.patch
 ```
 
-Potem zaktualizuj `patch.json` i sprawdź nałożenie na czystej bazie.
+Potem zaktualizuj `patch.json` w tym samym katalogu, sprawdź nałożenie na czystej bazie
+i zrób commit pakietu na `build/tmz`. Gałąź źródłowa dostaje tylko przeniesiony kod.
