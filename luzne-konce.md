@@ -4,14 +4,6 @@ Rozjazdy znalezione przy spisywaniu dokumentacji 14 września 2026, uzupełnione
 15 września po integracji panelu z inventory. Każdy to osobna decyzja; rzeczy
 rozwiązane są z listy usuwane. Kolejność od najbardziej wpływowych.
 
-## Repozytoria
-
-**`ixray-hd-hud` (dodatek obcy) dowozi własny `configs/ui/actor_menu_16.xml`** —
-z `cols_num="7"`. Kopia z `ixray-hd-icons` różni się od niej wyłącznie sześcioma siatkami.
-Dziś wygrywa `ixray-hd-icons` (montowanie jest alfabetyczne, widać to w logu), ale
-wystarczy zmiana nazwy katalogu, żeby ekwipunek „wrócił" do siedmiu kolumn bez żadnego
-błędu. Kontrola: [docs/dodatki.md](docs/dodatki.md#kolizje-między-dodatkami--kontrola-przy-integracji).
-
 ## Dane dodatków
 
 **12 błędów `!!!DLTX ERROR` w logu z 15.09; 10 z nich to nasze.**

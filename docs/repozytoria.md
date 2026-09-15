@@ -33,7 +33,7 @@ Ikony ekwipunku w wysokiej rozdzielczości i geometria siatki ekwipunku.
 
 Ten dodatek świadomie podmienia całe pliki XML zamiast używać XMLOverride — bo zmienia
 geometrię siatki, a nie pojedyncze węzły. Konsekwencja: kłóci się z każdym innym
-dodatkiem ruszającym `actor_menu_16.xml` (patrz [luzne-konce.md](../luzne-konce.md)).
+dodatkiem ruszającym `actor_menu_16.xml` (patrz [dodatki.md](dodatki.md#kolizje-między-dodatkami--kontrola-przy-integracji)).
 
 ### `ixray-ui-params`
 

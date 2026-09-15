@@ -60,10 +60,9 @@ Co sprawdzić:
      | sed -E 's#^\./([^/]+)/(.*)$#\L\2\E\t\1#' | sort \
      | awk -F'\t' '{c[$1]++; l[$1]=l[$1]" "$2} END{for(k in c) if(c[k]>1) print k" :"l[k]}'
    ```
-   Przy zdublowanym pliku porównaj obie kopie. Stan z 15.09: `configs/ui/actor_menu_16.xml`
-   dowożą `ixray-hd-hud` i `ixray-hd-icons`, a różnią się **wyłącznie** sześcioma siatkami
-   (`screen_cell_size`, `cols_num="8"`, `scroll_profile`). Wygrywa `hd-icons`; gdyby wygrał
-   `hd-hud`, ekwipunek wróci do 7 kolumn bez śladu w logu.
+   Przy zdublowanym pliku porównaj obie kopie. Przy aktualizacji `ixray-hd-hud` porównaj
+   jego `actor_menu_16.xml` z kopią w `ixray-hd-icons`, żeby nie zgubić nowych zmian
+   upstreamowego dodatku.
 2. **Te same sekcje LTX nadpisywane przez kilka dodatków i błędy `!!!DLTX ERROR`** —
    polecenie i procedura w [dltx.md](dltx.md#kontrola-przy-integracji).
 3. **XML oczekujący silnika** (`FAILED TO COMPILE` w logu) —
