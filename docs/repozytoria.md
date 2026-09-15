@@ -25,7 +25,9 @@ Ikony ekwipunku w wysokiej rozdzielczości i geometria siatki ekwipunku.
 - Zawiera: `configs/ui/actor_menu_16.xml`, `configs/ui/scroll_bar{,_16}.xml`
   (podmiana **całych plików**), `configs/misc/mod_items_hd_icons.ltx` (DLTX),
   `textures/ui/ui_icon_equipment_hd.dds`.
-- Gałęzie silnika: `feature/inventory-cell-grid` (bazuje na `feature/inventory-drop-cell`).
+- Gałęzie silnika: łańcuch gałęzi źródłowych `fix/inventory-drop-cell` →
+  `feature/inventory-drop-preview` → `feature/inventory-cell-grid`, każda na poprzedniej,
+  pierwsza na czystym upstreamie ([pakiety-poprawek.md](pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory)).
 - Pakiety: `inventory-drop-cell` → `inventory-drop-preview` → `inventory-cell-grid`.
 - Testy: `tests/inventory-drop/`.
 

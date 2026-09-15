@@ -6,10 +6,6 @@ rozwiązane są z listy usuwane. Kolejność od najbardziej wpływowych.
 
 ## Gałęzie
 
-**`feature/inventory-cell-grid` odgałęziono od `build/tmz`, nie od `default`.** Niesie
-przez to stare merge'e panelu, fontów i CI. Nie szkodzi, dopóki nie dotyka plików innych
-gałęzi, ale eksport patcha z tej gałęzi wymaga odcięcia tej historii.
-
 **`origin/codex/tooltip-real-seconds`** to nieaktualna migawka bez lokalnego
 odpowiednika — leży na `origin` i nic z niej nie wynika.
 
@@ -17,14 +13,14 @@ odpowiednika — leży na `origin` i nic z niej nie wynika.
 które weszły commitem `ec3285d5a` — do usunięcia, niczego nie niesie.
 
 **`CLAUDE.md` w repozytorium silnika jest na `build/tmz` i `feature/ui-param-bars`,
-nie ma go na czterech pozostałych gałęziach roboczych** (poza `default`, lustrem upstreamu,
-i scaloną `build/ci-release`). To decyzja, nie przeoczenie:
-`fix/equipment-condition-time` jest celowo trzymana jako pojedynczy commit na czystym
-upstreamie, żeby patch dało się czysto wyeksportować — dodatkowy commit z dokumentacją
-zepsułby ten cel. `feature/inventory-cell-grid`, `feature/inventory-drop-cell`
-i `feature/ttf-codepages` są w całości scalone, a nowa praca odgałęzia się od `build/tmz`,
-które plik ma. Gdyby któraś z nich
-wróciła do życia, trzeba tam przenieść commit `1e4108d0f`.
+nie ma go na pięciu pozostałych gałęziach roboczych** (poza `default`, lustrem upstreamu,
+i scaloną `build/ci-release`). To decyzja, nie przeoczenie. Gałęzie źródłowe pakietów
+(`fix/equipment-condition-time` oraz łańcuch `fix/inventory-drop-cell` →
+`feature/inventory-drop-preview` → `feature/inventory-cell-grid`) stoją celowo na czystym
+upstreamie, żeby patche dało się czysto wyeksportować. Commit z dokumentacją zepsułby
+ten cel. `feature/ttf-codepages` jest w całości scalona, a nowa praca odgałęzia się
+od `build/tmz`, które plik ma. Gdyby wróciła do życia, trzeba tam przenieść
+commit `1e4108d0f`.
 
 ## Dokumentacja odwołująca się w próżnię
 
@@ -95,10 +91,19 @@ kolidująca z własną konwencją.
 **`apply.py` istnieje w pięciu niemal identycznych kopiach** i **nigdy nie czyta
 `patch.json`** — `sha256` i `verified_upstream_base` to metadane bez egzekucji.
 
-**Pakiet `inventory-cell-grid` jest nieaktualny.** Jego `patch.json` wymienia commity
-`28424e0f3` i `e9fb81e26`, nie zna dwóch późniejszych (martwy pasek, fallback profilu),
-a README opisuje XML w `gamedata/configs/ui/actor_menu_16.xml`, którego tam już nie ma —
-konfiguracja przeniosła się do dodatku. Wszedł w tym stanie do `build/tmz`.
+**`build/tmz` niesie nieaktualne kopie pakietów inventory.** Aktualne leżą od 15.09 na
+czubku `feature/inventory-cell-grid` (`ea5103d0e`). Kopia w `build/tmz` jest starsza:
+- `inventory-cell-grid` zna tylko `28424e0f3` i `e9fb81e26`, bez martwego paska i fallbacku
+  profilu, a README opisuje XML w `gamedata`;
+- drop-* mają dawny format eksportu i inne `sha256`.
+
+`build/tmz` celowo zostawiono nietknięte. Pakiet biorący się z `build/tmz` jest niekompletny.
+Szczegóły: [docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory).
+
+**`apply.py` pakietów `inventory-drop-*` nie rozpoznaje własnej poprawki po nałożeniu
+`inventory-cell-grid`.** Zwraca 1 (drop-cell) albo 2 (drop-preview) zamiast 0, bo cell-grid
+przepisuje ich linie. Sprawdzone 15.09 na czystym `6c793faee`. Odnotowane w README obu
+pakietów, nie naprawione.
 
 **Luźny `patches/0001-Wyb-r-strony-kodowej-*.patch`** jest nieśledzony i w formacie
 sprzed konwencji katalogów.

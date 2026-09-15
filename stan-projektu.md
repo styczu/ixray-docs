@@ -33,6 +33,20 @@ testami `tests/condition-ui/` i `tests/hud-motions/`.
 `e39632874`), więc nie czeka na scalenie i nie scala się jej. Zasady:
 [docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#gałąź-źródłowa-samodzielnego-pakietu).
 
+Łańcuch gałęzi źródłowych inventory odtworzono 15.09 na czystym upstreamie:
+`fix/inventory-drop-cell` (`36e469d8f`) → `feature/inventory-drop-preview` (`15e6b828d`) →
+`feature/inventory-cell-grid` (`ea5103d0e`). Wypchnięty na `origin`, a dawną
+`feature/inventory-drop-cell` usunięto. Nic tu nie czeka na scalenie: kod jest identyczny
+z tym w `build/tmz`, a jedyną nową treścią są zregenerowane pakiety na czubku.
+`build/tmz` i binarka w grze się nie zmieniły.
+- Sprawdzone: wszystkie testy `tests/inventory-drop/` na każdym commicie łańcucha
+  i nałożenie trzech pakietów przez `apply.py` na czystym `6c793faee`.
+- CI zielone na `02915a7da` (kod) i na `ea5103d0e` (kod + pakiety).
+- Buildu z samych pakietów nie grano.
+
+Zasady:
+[docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory).
+
 **Skąd wzięła się regresja z 14.09:** do 13:50 grano na binarce zbudowanej wprost
 z `feature/ui-param-bars`, potem na buildach inventory i `build/tmz`, które nigdy nie
 dostały 27 nowszych commitów panelu. Merge inventory niczego nie cofnął.

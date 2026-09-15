@@ -79,7 +79,7 @@ Wykrywanie zależności ma dwie odmiany:
   `git add -f`. Zmiany w plikach już śledzonych `git status` pokazuje, ale
   `git add <ścieżka>` też odmawia („paths are ignored") — użyj `git add -u -- <pakiet>`.
 - **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
-  `verified_upstream_base` / `original_parent` / `original_commits`;
+  `verified_upstream_base` / `original_parent` / `original_commits` (od 15.09 także `branch`);
   `equipment-condition-time` używa `upstream_base` / `branch` / `commit` / `files`.
   Przy nowym pakiecie wybierz jeden i trzymaj się go.
 - **Zintegrowanej gałęzi nie patchuje się ponownie.** Pakiet służy do przeniesienia
@@ -94,7 +94,8 @@ Pakiet `equipment-condition-time` ma w forku **utrzymywaną gałąź źródłow�
 `fix/equipment-condition-time`**, wypchniętą na `origin`. Z niej powstaje patch i na niej
 przenosi się poprawkę na przyszłe wersje upstreamu. Do 15 września 2026 nazywała się
 `codex/equipment-condition-time` — ta nazwa została w kopii pakietu na scalonej
-`feature/ui-param-bars`. Inne pakiety takiej gałęzi dziś nie mają.
+`feature/ui-param-bars`. Rodzina inventory ma zamiast pojedynczej gałęzi
+[łańcuch gałęzi źródłowych](#łańcuch-gałęzi-źródłowych-inventory).
 
 - Gałąź to **dokładnie jeden commit poprawki na czystym upstreamie** (dziś `0e76d116e`
   na `6c793faee`). Nie dokładaj tam pakietu, dokumentacji ani `CLAUDE.md` — drugi commit
@@ -107,6 +108,72 @@ przenosi się poprawkę na przyszłe wersje upstreamu. Do 15 września 2026 nazy
 - Przy nowym upstreamie przenieś commit wg [aktualizacji pakietu](#aktualizacja-pakietu),
   zaktualizuj w `patch.json` pola `upstream_base`, `commit` i `sha256`, a gałąź wypchnij
   ponownie. Rebase przepisuje historię, więc push wymaga `--force-with-lease`.
+
+## Łańcuch gałęzi źródłowych inventory
+
+Trzy pakiety inventory zależą od siebie, więc ich gałęzie źródłowe tworzą łańcuch.
+Odtworzono go 15 września 2026 z historii `build/tmz`. Wcześniej `feature/inventory-cell-grid`
+odgałęziała się od `build/tmz` i niosła merge'e panelu, fontów i CI, a
+`feature/inventory-drop-cell` łączyła dwa pakiety.
+
+```
+default 6c793faee
+ └ 36e469d8f                                    ← fix/inventory-drop-cell
+   └ 15e6b828d                                  ← feature/inventory-drop-preview
+     └ 60564a6bf fe243d080 2b665a2b0 02915a7da    kod inventory-cell-grid
+       └ ea5103d0e  pakiety wszystkich trzech   ← feature/inventory-cell-grid
+```
+
+- Każda gałąź niesie tylko swój kod z testami i gałęzie poprzednie: bez merge'y, bez
+  `CLAUDE.md`, bez zmian w `gamedata`. `fix/inventory-drop-cell` to jeden commit na czystym
+  upstreamie, jak `fix/equipment-condition-time`.
+- **Pakiety leżą w jednym commicie na czubku `feature/inventory-cell-grid`**, bo i tak
+  muszą być katalogami obok siebie. Pierwsze dwie gałęzie to sam kod.
+- Eksport z gałęzi:
+  ```sh
+  F="--stdout --full-index --no-signature"
+  git format-patch $F -1 fix/inventory-drop-cell > inventory-drop-cell/0001-fix-inventory-drop-cell.patch
+  git format-patch $F fix/inventory-drop-cell..feature/inventory-drop-preview > inventory-drop-preview/0001-fix-inventory-drop-preview.patch
+  git format-patch $F feature/inventory-drop-preview..feature/inventory-cell-grid -- src tests > inventory-cell-grid/0001-fix-inventory-cell-grid.patch
+  ```
+  `-- src tests` pomija commit z pakietami. Gdyby kod cell-grid zaczął ruszać coś poza tymi
+  katalogami, listę trzeba rozszerzyć, bo inaczej patch po cichu to zgubi.
+- `patch.json` wskazuje gałąź w `branch`. W cell-grid `original_commits` to SHA na gałęzi,
+  a `integrated_commits` to odpowiedniki w `build/tmz`.
+- **Nie scala się ich do `build/tmz`.** Treść weszła tam dawnymi merge'ami `cc2b71d18`,
+  `0cea6397d` i `a22572dde`. Stan zamierzony wygląda tak:
+  - `git log build/tmz..fix/inventory-drop-cell` i `..feature/inventory-drop-preview` są
+    puste, bo to te same commity;
+  - `git cherry build/tmz feature/inventory-cell-grid` daje `- + + - +`. Środkowe `+` to
+    `fe243d080` i `2b665a2b0`, które od `e9fb81e26` i `8c031bfb9` różnią się wyłącznie
+    wyciętym dodaniem i cofnięciem `screen_cell_size` w `gamedata`. Ostatni `+` to commit
+    pakietów.
+
+  Równoważność kodu:
+  ```sh
+  git diff build/tmz feature/inventory-cell-grid -- $(git diff --name-only default feature/inventory-cell-grid -- src tests)
+  ```
+  → puste.
+- **`build/tmz` niesie starszą kopię pakietów**: cell-grid z dwoma commitami i XML-em
+  w `gamedata`, drop-* z dawnym formatem eksportu. Aktualne są na `feature/inventory-cell-grid`.
+- **`apply.py` pakietów drop-* nie rozpoznaje własnej poprawki po nałożeniu cell-grid**
+  (kody 1 i 2 zamiast 0), bo cell-grid przepisuje ich linie. Stan takiego repozytorium
+  zgłasza dopiero `apply.py` pakietu cell-grid.
+- CI: push refa wskazującego commit, który już jest na `origin`, nie uruchamia workflow.
+  Nowy kod idzie więc do CI przez tymczasową gałąź `rebuild/*`, a właściwe gałęzie
+  podmienia się dopiero po zielonym wyniku. Gałąź tymczasową usuwa się osobnym pushem,
+  gdy zielone jest też CI na nowym czubku.
+  Na czystym `default` workflow upstreamu buduje `Build engine` tylko w RelWithDebInfo.
+
+**Przeniesienie łańcucha na nowy upstream** w osobnym checkoucie (worktree):
+
+1. `git rebase --update-refs --onto upstream/default <verified_upstream_base> feature/inventory-cell-grid`
+   przesuwa wszystkie trzy gałęzie naraz.
+2. Commit pakietów przejdzie bez konfliktu, ale ze starymi patchami. Wygeneruj je
+   poleceniami wyżej, zaktualizuj `patch.json` (baza, commity, `sha256`) i README,
+   po czym popraw ten commit (`--amend`, bo jest na czubku).
+3. Uruchom testy na każdym commicie łańcucha i macierz `apply.py` na czystym nowym upstreamie.
+4. Wypchnij trzy gałęzie z `--force-with-lease=<ref>:<stary sha>`.
 
 ## Aktualizacja pakietu
 

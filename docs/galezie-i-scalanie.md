@@ -20,6 +20,12 @@ z niej patch — przeczytaj
 [pakiety-poprawek.md](pakiety-poprawek.md#gałąź-źródłowa-samodzielnego-pakietu).
 Ta gałąź ma zostać pojedynczym commitem.
 
+**Jeśli pracujesz na `fix/inventory-drop-cell`, `feature/inventory-drop-preview` albo
+`feature/inventory-cell-grid`** — przeczytaj
+[pakiety-poprawek.md](pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory). To łańcuch
+gałęzi źródłowych pakietów, już scalony do `build/tmz`. Nie odgałęziaj od nich nowej pracy
+i nie scalaj ich ponownie. Zmiana w inventory idzie przez przebudowę łańcucha.
+
 **Świadome odstępstwo:** upstream wymaga liniowej historii, a `build/tmz` jest oparta
 na merge'ach. To celowe — merge commit z opisem jest tu nośnikiem informacji o tym, co
 i kiedy weszło do buildu.

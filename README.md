@@ -47,7 +47,7 @@ silnik wymaga buildu z CI.
 
 | Dodatek | Gałąź silnika | Pakiet w `patches/` | Testy |
 | --- | --- | --- | --- |
-| `ixray-hd-icons` | `feature/inventory-cell-grid`, `feature/inventory-drop-cell` | `inventory-cell-grid`, `inventory-drop-cell`, `inventory-drop-preview` | `tests/inventory-drop/` |
+| `ixray-hd-icons` | łańcuch `fix/inventory-drop-cell` → `feature/inventory-drop-preview` → `feature/inventory-cell-grid` | `inventory-drop-cell`, `inventory-drop-preview`, `inventory-cell-grid` | `tests/inventory-drop/` |
 | `ixray-ui-params` | `feature/ui-param-bars`, `fix/equipment-condition-time` | `equipment-condition-time`, `hud-motion-cache` | `tests/condition-ui/`, `tests/hud-motions/` |
 | `ixray-ttf-extended` | `feature/ttf-codepages` | — | — |
 
