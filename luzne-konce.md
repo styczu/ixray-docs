@@ -83,11 +83,12 @@ wymaga liniowej. To świadome odstępstwo, ale warto o nim pamiętać przy ewent
 
 ## Drobne
 
-**Zainstalowany `addon.init` dodatku `ixray-hd-icons` jest pusty.** W grze ma 0 B
-(zmieniony 15.09 o 13:40), a w repo 28 B (`name: IX-Ray HD Icons [tmz]`). To jedyna
-różnica z `diff -rq` z [docs/wdrazanie.md](docs/wdrazanie.md). Dodatek mimo to się montuje:
-log z 15.09 14:21 ma `Processing ixray-hd-icons\ addon completed!`. Czy brak nazwy
-cokolwiek zmienia, nie sprawdzano.
+**Silnik nie czyta `name:` z `addon.init`.** W `CAddonManager::ReadMetaInfo`
+(`src/xrCore/xrAddons.cpp`) warunek jest odwrócony: `if (NameEntryIndex == xr_string::npos)`.
+Gdy `name:` jest w pliku, `AddonName` zostaje puste. Gdy go nie ma, silnik tnie tekst od
+pozycji `npos + 6`, czyli 5. Błąd pochodzi z upstreamu (`f2e2761bf`), `build/tmz` go nie
+zmienia. Dziś nie ma skutków: `AddonName` widzi tylko Lua (`src/xrGame/addon_manager_script.cpp`),
+a żaden `*.script` w `gamedata/` ani `ixr_addons/` go nie używa.
 
 **Testów nie uruchamia żadne CI** — weryfikacja jest wyłącznie lokalna i ręczna.
 

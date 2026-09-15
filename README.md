@@ -29,7 +29,7 @@ innych repozytoriów.
 - **Mechanika dodatków**: `addon.init`, `<gra>/ixr_addons`, kolejność montowania, ten sam plik w kilku dodatkach, tekstury i `textures_descr` → `/home/tmz/Projects/ixray-docs/docs/dodatki.md`
 - **Teksty i kodowanie**: `text/<język>/`, strony kodowe, CRLF, fonty, polskie/czeskie znaki, `! duplicate string table id`, `! Glyph not found` → `/home/tmz/Projects/ixray-docs/docs/teksty-i-kodowania.md`
 - **Gałęzie i CI**: `feature/*`, `fix/*`, `codex/*`, merge do `build/tmz`, `default`, upstream, `gh run` → `/home/tmz/Projects/ixray-docs/docs/galezie-i-scalanie.md`
-- **Instalacja do gry**: build z CI, `install-build.sh`, kopiowanie dodatku do `<gra>/ixr_addons`, „poprawka nie działa w grze" → `/home/tmz/Projects/ixray-docs/docs/wdrazanie.md`
+- **Instalacja do gry**: build z CI, `install-build.sh`, kopiowanie dodatku do `<gra>/ixr_addons`, `addon-sync`, „poprawka nie działa w grze" → `/home/tmz/Projects/ixray-docs/docs/wdrazanie.md`
 - **Pakiety poprawek**: `patches/*`, `apply.py`, `patch.json`, `format-patch`, przenoszenie poprawki na inną wersję → `/home/tmz/Projects/ixray-docs/docs/pakiety-poprawek.md`
 - **Testy silnika**: `tests/*`, pisanie lub uruchamianie testu, `IXRAY_TEST_ROOT` → `/home/tmz/Projects/ixray-docs/docs/testy.md`
 - **Środowisko**: ścieżki spoza tabeli wyżej, logi gry, `fsgame.ltx`, magazyn buildów, Release vs RelWithDebInfo → `/home/tmz/Projects/ixray-docs/docs/srodowisko.md`

@@ -10,7 +10,7 @@ Stan na **15 września 2026**. Odczytany z repozytoriów i katalogu gry, nie z p
 | Co | Stan |
 | --- | --- |
 | Silnik w `<gra>/bin/` | build commitu **`236edf3a7`** (ostatni commit `build/tmz` ze zmianami kodu; nowszy `7382923aa` zmienia tylko metadane pakietu `equipment-condition-time`, bez `src/`), wariant RelWithDebInfo, zainstalowany 15.09 o 07:44; binarka niesie nazwę gałęzi `build/tmz-fix-panel`, z której zbudowało ją CI przed przesunięciem `build/tmz` |
-| `ixray-hd-icons` | wdrożony, zgodny z repo (`e308b84`) poza pustym `addon.init` w grze |
+| `ixray-hd-icons` | wdrożony, zgodny z repo (`e308b84`) |
 | `ixray-ui-params` | wdrożony, zgodny (różni się tylko `src/`, czyli pliki robocze, których się nie wdraża) |
 | `ixray-ttf-extended` | wdrożony, zgodny |
 

@@ -5,28 +5,38 @@ w C++ wymaga przejścia przez CI i instalacji binarek — kilkanaście minut.
 
 ## Dodatek
 
-Katalog roboczy dodatku **nie jest** tym, z którego czyta gra. Trzeba skopiować:
+Katalog roboczy dodatku **nie jest** tym, z którego czyta gra. Dodatek trzeba wdrożyć.
+Służy do tego narzędzie `~/bin/addon-sync`; to skrypt, który nie leży w żadnym repozytorium:
 
 ```sh
-cp -r /home/tmz/Projects/ixray-addons/<nazwa>/. \
-      "/home/tmz/Games/Heroic/S.T.A.L.K.E.R. Call of Pripyat/ixr_addons/<nazwa>/"
+addon-sync -c -a            # sprawdź wszystkie dodatki (rsync -n -c, sumy kontrolne)
+addon-sync -c -v -n <nazwa> # wypisz różniące się pliki z datami
+addon-sync -s -n <nazwa>    # wdróż (rsync -av)
 ```
+
+Źródłem są katalogi w `/home/tmz/Projects/ixray-addons` z wyjątkiem `engine-bin`.
+Skrypt pomija `.git*`, `docs/`, `src/`, `tools/`, `README.md`, `AGENTS.md` i `CLAUDE.md`.
+Bez narzędzia można użyć `cp -r <repo-dodatku>/. "<gra>/ixr_addons/<nazwa>/"`, ale to
+kopiuje wszystko, także `.git` i dokumenty.
 
 Alternatywnie zlinkować katalog, żeby się nie rozjeżdżał — dziś to osobne kopie.
 
-**`cp -r` nie usuwa plików przemianowanych ani usuniętych w repo.** Po zmianie nazwy
-`mod_items_hd_medkits.ltx` → `mod_items_hd_icons.ltx` w `ixray-hd-icons` stara kopia
-została w grze i nadpisywała apteczki teksturą z literówką.
+**Ani `addon-sync -s`, ani `cp -r` nie usuwają plików przemianowanych ani usuniętych
+w repo.** Po zmianie nazwy `mod_items_hd_medkits.ltx` → `mod_items_hd_icons.ltx`
+w `ixray-hd-icons` stara kopia została w grze i nadpisywała apteczki teksturą z literówką.
+**`addon-sync -c` takich plików też nie pokaże**, bo porównuje tylko pliki obecne w repo.
 
 Potem restart gry. Zmiany w XML i LTX nie wymagają niczego więcej.
 
-Sprawdzenie, czy wdrożone jest to, co trzeba — porównaj cały katalog z roboczym:
+Pełne sprawdzenie, czy wdrożone jest to, co trzeba, widzi też pliki, których w repo już
+nie ma. Porównaj cały katalog z roboczym:
 
 ```sh
 diff -rq -x '.git*' -x docs -x src -x tools -x '*.md' <repo-dodatku> "<gra>/ixr_addons/<nazwa>"
 ```
 
-Pusty wynik oznacza zgodność (stan z 15.09: wszystkie trzy dodatki projektu zgodne).
+Pusty wynik oznacza zgodność. Stan z 15.09: wszystkie trzy dodatki projektu są zgodne
+według obu kontroli.
 
 albo poszukaj konkretnej wartości:
 

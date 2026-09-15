@@ -12,6 +12,13 @@ w ogóle go nie zamontuje. Zawartość to jedna linia:
 name: IX-Ray HD Icons [tmz]
 ```
 
+**Silnik montuje katalog po samym istnieniu pliku** (`CanApply` w `src/xrCore/xrAddons.cpp`),
+a zawartość czyta osobno, tylko na metadane dla Lua. Pusty albo uszkodzony `addon.init`
+nie daje więc żadnego objawu: `Processing <nazwa>\ addon completed!` pojawia się w logu także
+przy pliku 0 B. Rozjazd wychodzi dopiero przy porównaniu z repo
+([wdrazanie.md](wdrazanie.md#dodatek)). Jeśli skrypt Lua potrzebuje nazwy dodatku, przeczytaj
+wpis o `ReadMetaInfo` w [luzne-konce.md](../luzne-konce.md).
+
 ## Mapowanie ścieżek
 
 **Katalog dodatku mapuje się wprost na `gamedata`** — w środku nie ma poziomu
@@ -63,9 +70,9 @@ Co sprawdzić:
    [xml-override.md](xml-override.md#xml-oczekujący-silnika--failed-to-compile).
 4. **Zdublowane identyfikatory tekstów** (`! duplicate string table id`) —
    [teksty-i-kodowania.md](teksty-i-kodowania.md#kolejność-plików-tekstów-i-zdublowane-identyfikatory).
-5. **Instalacja zgodna z repo** — `diff -rq` katalogu roboczego z zainstalowanym;
-   `cp -r` nie usuwa plików przemianowanych. Polecenie:
-   [wdrazanie.md](wdrazanie.md#dodatek).
+5. **Instalacja zgodna z repo**: szybko przez `addon-sync -c -a`, w pełni przez `diff -rq`
+   katalogu roboczego z zainstalowanym. Tylko `diff -rq` widzi pliki przemianowane, które
+   zostały w grze. Polecenia: [wdrazanie.md](wdrazanie.md#dodatek).
 
 ## Tekstury
 
