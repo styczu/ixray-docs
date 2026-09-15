@@ -85,8 +85,10 @@ niewidoczne dla `git status` i wymagają `git add -f`. Reguła odziedziczona z u
 kolidująca z własną konwencją.
 
 **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
-`verified_upstream_base` / `original_parent` / `original_commits`;
-`equipment-condition-time` używa `upstream_base` / `branch` / `commit` / `files`.
+`verified_upstream_base` / `original_parent` / `original_commits` (drop-* mają
+`original_integrated_commit`, cell-grid `original_commits` i `integrated_commits`),
+od 15.09 także `branch`; `equipment-condition-time` używa
+`upstream_base` / `branch` / `commit` / `files`.
 
 **`apply.py` istnieje w pięciu niemal identycznych kopiach** i **nigdy nie czyta
 `patch.json`** — `sha256` i `verified_upstream_base` to metadane bez egzekucji.
