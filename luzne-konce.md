@@ -86,9 +86,19 @@ wymaga liniowej. To świadome odstępstwo, ale warto o nim pamiętać przy ewent
 **Silnik nie czyta `name:` z `addon.init`.** W `CAddonManager::ReadMetaInfo`
 (`src/xrCore/xrAddons.cpp`) warunek jest odwrócony: `if (NameEntryIndex == xr_string::npos)`.
 Gdy `name:` jest w pliku, `AddonName` zostaje puste. Gdy go nie ma, silnik tnie tekst od
-pozycji `npos + 6`, czyli 5. Błąd pochodzi z upstreamu (`f2e2761bf`), `build/tmz` go nie
-zmienia. Dziś nie ma skutków: `AddonName` widzi tylko Lua (`src/xrGame/addon_manager_script.cpp`),
-a żaden `*.script` w `gamedata/` ani `ixr_addons/` go nie używa.
+pozycji `npos + 6`, czyli 5. Przy niepustym pliku krótszym niż 5 B `substr` rzuci
+`std::out_of_range`, a tego wyjątku nic nie łapie. Warunek wprowadził upstreamowy commit
+`f2e2761bf` (2024-08-04), `build/tmz` go nie zmienia. Czy żywy upstream nadal ma ten błąd,
+nie sprawdzano; lokalne `upstream/default` jest z 6.09. Dziś nie ma skutków. Każdy
+zainstalowany `addon.init` ma 0 B (wtedy silnik wychodzi wcześniej) albo co najmniej 13 B.
+`AddonName` widzi tylko Lua (`src/xrGame/addon_manager_script.cpp`), a żaden `*.script`
+w `gamedata/` ani `ixr_addons/` go nie używa.
+
+**`~/bin/addon-sync` nie leży w żadnym repozytorium**, a
+[docs/wdrazanie.md](docs/wdrazanie.md#dodatek) przepisuje jego listę wykluczeń. Zmiana
+skryptu rozjedzie się z dokumentem bez śladu. Obie kontrole zgodności pomijają też różne
+zbiory plików: `addon-sync` tylko `README.md`, `AGENTS.md` i `CLAUDE.md`, a `diff -rq
+-x '*.md'` wszystkie `.md`. Dziś bez znaczenia, bo w trzech dodatkach nie ma innych `.md`.
 
 **Testów nie uruchamia żadne CI** — weryfikacja jest wyłącznie lokalna i ręczna.
 
