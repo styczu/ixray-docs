@@ -38,6 +38,32 @@ Nasze dodatki ich nie używają i nie są tu opisane — przed użyciem sprawdź
   są scalane z bazą na końcu. Kolejność `#include` nie ma więc znaczenia — liczy się tylko to,
   czy sekcja bazowa w ogóle jest w tym drzewie.
 
+## Korzeń to nie to samo, co "plik dołączony gdzieś w drzewie"
+
+`mod_system_*.ltx` patchuje wyłącznie ten jeden obiekt konfiguracji, który silnik
+zbudował z `system.ltx` i jego `#include`. Pliki ładowane **osobno** — inną
+instancją `CInifile`, np. z Lua przez `ini_file("item_upgrades.ltx")`
+(`inventory_upgrades.script`) — nie są tym drzewem, nawet jeśli logicznie
+"dotyczą" tego samego tematu (upgrade'y) i nawet jeśli same coś `#include`ują.
+Sekcja widoczna wyłącznie przez taki osobny plik jest dla `mod_system_*.ltx`
+tak samo niewidoczna, jakby nie istniała.
+
+**Zweryfikowany przypadek (15.09):** `item_upgrades.ltx` z `ixray-stcop-wp-3.8-cop`
+jest ładowany właśnie tak — osobno, przez skrypt — więc jego `#include`
+`misc\outfit_upgrades\o_svoboda_outfit_up.ltx` nie ma znaczenia dla
+`mod_system_*.ltx`. To, co faktycznie wprowadziło część sekcji `o_svoboda_outfit_up.ltx`
+do drzewa `system.ltx`, to zupełnie inna ścieżka: `system.ltx` dołącza
+`misc\outfit.ltx`, a ten plik jest **nadpisany po ścieżce** przez
+`ixray-stcop-wp-outfits/configs/misc/outfit.ltx`, który dokłada własny
+`#include "outfit_upgrades\o_svoboda_outfit_up.ltx"`. Dodatek nakładający plik
+o tej samej względnej ścieżce potrafi więc rozszerzyć drzewo korzenia — osobno
+ładowany plik o pozornie tym samym include nie.
+
+Wniosek praktyczny: przy `!!!DLTX ERROR` nie wystarczy znaleźć jakikolwiek
+`#include` prowadzący do pliku z definicją. Trzeba ustalić, czy ten konkretny
+`#include` leży w pliku, który faktycznie trafia do korzenia z komunikatu błędu
+(`system.ltx`, `engine_external.ltx`, ...) — a nie w pliku ładowanym oddzielnie.
+
 ## Granica: `zzzz_` nie tworzy sekcji
 
 Prefiks porządkuje wyłącznie pliki `mod_*` jednego korzenia. Jeśli sekcji bazowej nie ma

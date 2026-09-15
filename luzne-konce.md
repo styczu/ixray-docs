@@ -6,22 +6,7 @@ rozwiązane są z listy usuwane. Kolejność od najbardziej wpływowych.
 
 ## Dane dodatków
 
-**12 błędów `!!!DLTX ERROR` w logu z 15.09; 10 z nich to nasze.**
-`ixray-ui-params/configs/mod_system_zzzz_uiparams_environment_upgrades_extra.ltx`
-nadpisuje 10 sekcji `up_sect_*` kombinezonów `soldier`, `neutral_assault` i `svoboda`
-(m.in. `up_sect_second_soldier_outfit`, `up_sect_fiftha_neutral_assault_outfit`,
-`up_sect_seconf_svoboda_outfit`), których nie ma w chwili wczytania `system.ltx`.
-Te nadpisania dziś **nie działają**. Definiuje je wyłącznie `ixray-stcop-wp-outfits`
-w `configs/misc/outfit_upgrades/` (`o_soldier_outfit_up.ltx`,
-`o_neutral_assault_outfit_up.ltx`, `o_svoboda_ outfit_up.ltx` — ten ostatni **ze spacją**
-w nazwie). Pliki z tego katalogu dołącza przez `#include`
-`ixray-stcop-wp-3.8-cop/configs/item_upgrades.ltx`, ale plików `soldier` i `neutral_assault`
-nie dołącza wcale, a `svoboda` dołącza jako `o_svoboda_outfit_up.ltx`, bez spacji.
-Hipoteza, niesprawdzona w grze: definicje nie trafiają do żadnego łańcucha wczytywania.
-Czy bazowy plik z `configs.db` dołącza je inaczej — nie sprawdzono. Procedura:
-[docs/dltx.md](docs/dltx.md#procedura-dla-dltx-error).
-
-**Dwa pozostałe błędy DLTX pochodzą z dodatków obcych**, nie z `ixray-ui-params`:
+**Dwa błędy DLTX w logu pochodzą z dodatków obcych**, nie z `ixray-ui-params`:
 `wpn_protecta_nimble` z `ixray-pattern-recoil-stcop/configs/mod_system_wpn_pattern.ltx`
 i `spawn_supplies` z `lxrd-loadout-stcop/configs/mod_engine_external_lxrd_loadout.ltx`.
 Definicji bazowej `[wpn_protecta_nimble]` nie ma w żadnym dodatku ani w plikach luźnych
