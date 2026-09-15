@@ -17,11 +17,13 @@ odpowiednika — leży na `origin` i nic z niej nie wynika.
 które weszły commitem `ec3285d5a` — do usunięcia, niczego nie niesie.
 
 **`CLAUDE.md` w repozytorium silnika jest na `build/tmz` i `feature/ui-param-bars`,
-nie ma go na trzech pozostałych gałęziach.** To decyzja, nie przeoczenie:
+nie ma go na czterech pozostałych gałęziach roboczych** (poza `default`, lustrem upstreamu,
+i scaloną `build/ci-release`). To decyzja, nie przeoczenie:
 `fix/equipment-condition-time` jest celowo trzymana jako pojedynczy commit na czystym
 upstreamie, żeby patch dało się czysto wyeksportować — dodatkowy commit z dokumentacją
-zepsułby ten cel. `feature/inventory-cell-grid` i `feature/ttf-codepages` są w całości
-scalone, a nowa praca odgałęzia się od `build/tmz`, które plik ma. Gdyby któraś z nich
+zepsułby ten cel. `feature/inventory-cell-grid`, `feature/inventory-drop-cell`
+i `feature/ttf-codepages` są w całości scalone, a nowa praca odgałęzia się od `build/tmz`,
+które plik ma. Gdyby któraś z nich
 wróciła do życia, trzeba tam przenieść commit `1e4108d0f`.
 
 ## Dokumentacja odwołująca się w próżnię
