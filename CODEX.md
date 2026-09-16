@@ -41,22 +41,44 @@ Do not invoke the advisor for:
 
 The main agent handles substantial implementation.
 
-For significant C++ work, the main agent should implement the approved
+For significant C++ work, the main agent should implement the chosen
 approach after the advisor has resolved architectural uncertainty.
 
-Routine, independent, and mechanical subtasks may be delegated to
-normal subagents using the configured default subagent model.
+### Worker
 
-Good candidates for normal workers include:
+Use the configured `worker` subagent for routine implementation that
+requires some reasoning but does not involve architectural decisions.
 
-- repetitive XML edits;
-- LTX / DLTX changes with already-defined values;
-- mechanical refactors;
-- repetitive configuration changes;
-- independent file updates;
-- simple searches and inventory tasks.
+Typical tasks:
 
-Do not delegate architectural decisions to routine workers.
+- multi-file XML/LTX/DLTX changes with a known design;
+- straightforward configuration work;
+- adapting an existing implementation pattern;
+- routine non-architectural refactoring;
+- independent implementation subtasks.
+
+Do not delegate architectural decisions to the worker.
+
+### Mechanical worker
+
+Use the configured `mechanical` subagent for trivial, deterministic,
+well-scoped edits where the desired result is already known.
+
+Typical tasks:
+
+- adding DLTX overrides following an existing nearby pattern;
+- changing known XML/LTX values;
+- repetitive icon/grid overrides;
+- simple renames;
+- repetitive file edits;
+- small documentation changes.
+
+Do not use the mechanical worker when values or behavior must be inferred,
+when the correct implementation is unclear, or when engine behavior must
+be investigated.
+
+If a mechanical task becomes ambiguous, return it to the main agent
+instead of guessing.
 
 ## Review
 
