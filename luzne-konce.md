@@ -22,6 +22,25 @@ mechaniczna” zamiast „Tłumienie uderzeń”) — zamierzone, ale sześć os
 
 ## Silnik i pakiety
 
+**Podgląd attempted/final przy upuszczaniu (`inventory-drop-final-preview`) porzucony
+16 września 2026 po czterech rundach diagnostyki w grze.** Miał pokazywać czerwony
+footprint pod kursorem i osobny zielony footprint miejsca, w które trafi automatic
+placement — rozszerzenie ponad istniejący, pojedynczy footprint z `inventory-cell-grid`.
+Cztery kolejne wersje (dwie Codexa, dwie w tej sesji) miały poprawną geometrię, kolory,
+predykcję i wywołania renderowania — potwierdzone diagnostyką `Msg()` wprost z gry — a
+mimo to nic się nie rysowało. **Ustalona przyczyna:** `CUIDragItem` (ikona trzymana
+w ręku podczas przeciągania) rejestruje się na `Device.seqRender` jako niezależny obiekt
+`pureRender` (`REG_PRIORITY_LOW-5000`, `src/xrGame/ui/UICellItem.cpp`), poza normalnym
+przejściem drzewa okien, którym rysuje się plecak i podświetlenie. Nawet bezwarunkowy,
+w pełni nieprzezroczysty, geometrycznie poprawny prostokąt wysłany z jego callbacku
+`Draw()` był niewidoczny w grze — więc problem nie leżał w logice tej funkcji (kolorach,
+UV, przycinaniu, kolejności), tylko w tym konkretnym, odroczonym miejscu wywołania
+renderowania. Przeniesienie wywołania z powrotem do zwykłego `CUICellContainer::Draw()`
+(tego samego przebiegu co działająca siatka) też nie pomogło. `build/tmz` wrócił do stanu
+sprzed tej funkcjonalności (`ce6f8da75`); gałąź źródłowa `feature/inventory-drop-final-preview`
+zostaje na `origin`, nieużywana, z pełną historią diagnostyki. Kolejna próba tego tematu
+nie powinna zaczynać od rysowania z callbacku `CUIDragItem::Draw()`.
+
 **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
 `verified_upstream_base` / `original_parent` / `original_commits` (drop-* mają
 `original_integrated_commit`, cell-grid `original_commits` i `integrated_commits`),
