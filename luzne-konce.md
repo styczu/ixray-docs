@@ -41,20 +41,22 @@ sprzed tej funkcjonalności (`ce6f8da75`); gałąź źródłowa `feature/invento
 zostaje na `origin`, nieużywana, z pełną historią diagnostyki. Kolejna próba tego tematu
 nie powinna zaczynać od rysowania z callbacku `CUIDragItem::Draw()`.
 
+**Ta diagnoza jest najpewniej błędna (21 września 2026).** Wszystkie wersje rysowały
+podgląd shaderem siatki (`hShader`, tekstura `ui_grid`), a wnętrze komórki `ui_grid` jest
+przezroczyste. 17.09 build diagnostyczny `8e654bc11`/`eb20c9798` z tą samą geometrią, ale
+nieteksturowanym `hud\crosshair`, pokazał podświetlenie w grze. Ta sama przyczyna psuła
+zwykły, pojedynczy podgląd z `inventory-drop-preview`, naprawiony w `38d143702`. Stąd
+„nic się nie rysuje” także po przeniesieniu do `CUICellContainer::Draw()`. Kolejną próbę
+attempted/final zacznij od `hPreviewShader`, a teza o `pureRender` wymaga sprawdzenia od nowa.
+
 **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
-`verified_upstream_base` / `original_parent` / `original_commits` (drop-* mają
-`original_integrated_commit`, cell-grid `original_commits` i `integrated_commits`),
-od 15.09 także `branch`; `equipment-condition-time` używa
+`verified_upstream_base` / `original_parent` / `original_commits` (od 21.09 we wszystkich
+trzech pakietach, cell-grid dodatkowo `integrated_commits`), od 15.09 także `branch`;
+`equipment-condition-time` używa
 `upstream_base` / `branch` / `commit` / `files`.
 
 **`apply.py` istnieje w pięciu niemal identycznych kopiach** i **nigdy nie czyta
 `patch.json`** — `sha256` i `verified_upstream_base` to metadane bez egzekucji.
-
-**Na czubku `feature/inventory-cell-grid` został commit pakietów `ea5103d0e`**, wbrew
-zasadzie „gałąź źródłowa = kod, `build/tmz:patches/` = pakiety". Jego treść jest 1:1 na
-`build/tmz` (`5c3e60bfd`). Gałęzi celowo nie przepisano; commit pomija się przy najbliższej
-przebudowie łańcucha. Szczegóły:
-[docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory).
 
 **`hud-motion-cache` nie ma własnej gałęzi źródłowej.** `patch.json` zna tylko
 `original_integrated_commit` i `original_parent`. Pakietu nie da się więc wygenerować

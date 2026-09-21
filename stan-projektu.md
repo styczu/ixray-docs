@@ -44,6 +44,17 @@ z tym w `build/tmz`. Zregenerowane pakiety z czubka (`ea5103d0e`) skopiowano 1:1
 - CI zielone na `02915a7da` (kod) i na `ea5103d0e` (kod + pakiety).
 - Buildu z samych pakietów nie grano.
 
+**21.09 łańcuch przebudowano o własny shader podglądu upuszczenia.** Na
+`feature/inventory-drop-preview` doszedł `38d143702`, cztery commity cell-grid przeniesiono
+na niego (czubek `7ce0fdf74`), a commit pakietów `ea5103d0e` wypadł. Czubek scalono do
+`build/tmz` merge'em `e9103f55e`. Pakiety są zregenerowane w `1426c2561`, a `a5b65da44`
+ujednolica `patch.json` rodziny inventory.
+- Sprawdzone: testy `tests/inventory-drop/` na każdym commicie łańcucha, macierz `apply.py`
+  na czystym `6c793faee` (drzewo identyczne z `7ce0fdf74`), CI zielone na `7ce0fdf74`
+  (gałąź tymczasowa, potem usunięta) i na `a5b65da44` (`build/tmz`).
+- Zainstalowane: `a5b65da44` z `build/tmz`, RelWithDebInfo, 21.09.
+- W grze: jeszcze nie sprawdzone na tym buildzie.
+
 Zasady:
 [docs/pakiety-poprawek.md](docs/pakiety-poprawek.md#łańcuch-gałęzi-źródłowych-inventory).
 
@@ -61,6 +72,11 @@ Trzy etapy, wszystkie scalone i sprawdzone w grze przy 2560x1440:
 1. **Komórka docelowa przy upuszczaniu** liczona od kursora, nie od lewego górnego rogu
    ikony — z uwzględnieniem podkomórki, za którą złapano wielokomórkowy przedmiot.
 2. **Podgląd upuszczania** — podświetlanie komórek, w które przedmiot trafi.
+   Samo podświetlenie było w grze niewidoczne: rysowało się teksturą `ui_grid`, której
+   wnętrze komórki jest przezroczyste. Pierwszy raz widoczne 17.09 w buildzie
+   diagnostycznym `eb20c9798` z nieteksturowanym shaderem. Po instalacji `4ab8c52c9` 19.09
+   zniknęło znowu, bo tamta gałąź nie była scalona. Poprawka `38d143702` jest na `build/tmz`
+   i zainstalowana od 21.09 (`a5b65da44`); w grze jeszcze nie sprawdzona.
 3. **Stały rozmiar komórki w pełnych pikselach ekranu.** Nowy atrybut XML
    `screen_cell_size` daje kwadratową komórkę o zadanym rozmiarze niezależnie od
    asymetrycznej skali; obie krawędzie ikony są zaokrąglane do pełnego piksela, więc

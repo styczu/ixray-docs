@@ -92,12 +92,12 @@ Wykrywanie zależności ma dwie odmiany:
   `patches/patch_tmp/` i `patch_tmp/` łapie `patch*/`. **Nie dopisuj `!patches/**`** — nie
   jest potrzebne, a wyłączyłoby w `patches/` wszystkie wcześniejsze reguły (tak było
   w `356b52de7`). Gałęzie źródłowe stoją
-  na czystym upstreamie i wyjątku nie mają. Nie potrzebują go, bo pakietów nie niosą
-  (wyjątkiem jest pozostałość `ea5103d0e`, niżej).
+  na czystym upstreamie i wyjątku nie mają. Nie potrzebują go, bo pakietów nie niosą.
   Sprawdzając plik już śledzony, dodaj `git check-ignore -v --no-index`. Bez tej opcji
   polecenie pomija pliki śledzone i milczy także wtedy, gdy reguła je łapie.
 - **Dwa niezgodne schematy `patch.json`.** Rodzina inventory używa
-  `verified_upstream_base` / `original_parent` / `original_commits` (od 15.09 także `branch`);
+  `verified_upstream_base` / `original_parent` / `original_commits` (od 15.09 także `branch`,
+  od 21.09 we wszystkich trzech pakietach; wcześniej drop-* miały `original_integrated_commit`);
   `equipment-condition-time` używa `upstream_base` / `branch` / `commit` / `files`.
   Przy nowym pakiecie wybierz jeden i trzymaj się go.
 - **Zintegrowanej gałęzi nie patchuje się ponownie.** Pakiet służy do przeniesienia
@@ -134,25 +134,22 @@ przenosi się poprawkę na przyszłe wersje upstreamu. Do 15 września 2026 nazy
 ## Łańcuch gałęzi źródłowych inventory
 
 Trzy pakiety inventory zależą od siebie, więc ich gałęzie źródłowe tworzą łańcuch.
-Odtworzono go 15 września 2026 z historii `build/tmz`. Wcześniej `feature/inventory-cell-grid`
+Odtworzono go 15 września 2026 z historii `build/tmz`. 21 września przebudowano go o własny
+shader podglądu (`38d143702`) i przy okazji wypadł z czubka commit pakietów `ea5103d0e`,
+pozostałość sprzed zasady „gałąź = kod". Wcześniej `feature/inventory-cell-grid`
 odgałęziała się od `build/tmz` i niosła merge'e panelu, fontów i CI, a
 `feature/inventory-drop-cell` łączyła dwa pakiety.
 
 ```
 default 6c793faee
  └ 36e469d8f                                    ← fix/inventory-drop-cell
-   └ 15e6b828d                                  ← feature/inventory-drop-preview
-     └ 60564a6bf fe243d080 2b665a2b0 02915a7da    kod inventory-cell-grid
-       └ ea5103d0e  pakiety, pozostałość        ← feature/inventory-cell-grid
+   └ 15e6b828d 38d143702                        ← feature/inventory-drop-preview
+     └ 749023fc9 fdd20e29d 88d04a085 7ce0fdf74  ← feature/inventory-cell-grid
 ```
 
 - Każda gałąź niesie tylko swój kod z testami i gałęzie poprzednie: bez merge'y, bez
-  `CLAUDE.md`, bez zmian w `gamedata`. `fix/inventory-drop-cell` to jeden commit na czystym
-  upstreamie, jak `fix/equipment-condition-time`.
-- **`ea5103d0e` z pakietami na czubku `feature/inventory-cell-grid` jest pozostałością sprzed
-  zasady „gałąź = kod".** Jego treść leży 1:1 na `build/tmz` od `5c3e60bfd` i tam pakiety
-  się zmienia. Gałęzi nie przepisano tylko po to, żeby go usunąć. Przy najbliższej
-  przebudowie łańcucha ten commit się pomija.
+  `CLAUDE.md`, bez zmian w `gamedata`, bez `patches/`. `fix/inventory-drop-cell` to jeden
+  commit na czystym upstreamie, jak `fix/equipment-condition-time`.
 - Eksport z gałęzi, uruchamiany w katalogu głównym checkoutu `build/tmz`:
   ```sh
   F="--stdout --full-index --no-signature"
@@ -160,26 +157,24 @@ default 6c793faee
   git format-patch $F fix/inventory-drop-cell..feature/inventory-drop-preview > patches/inventory-drop-preview/0001-fix-inventory-drop-preview.patch
   git format-patch $F feature/inventory-drop-preview..feature/inventory-cell-grid -- src tests > patches/inventory-cell-grid/0001-fix-inventory-cell-grid.patch
   ```
-  `-- src tests` ogranicza patch do kodu i testów, a dziś pomija też `ea5103d0e`. Gdyby kod
-  cell-grid zaczął ruszać coś poza tymi katalogami, listę trzeba rozszerzyć, bo inaczej patch
-  po cichu to zgubi.
-- `patch.json` wskazuje gałąź w `branch`. W cell-grid `original_commits` to SHA na gałęzi,
-  a `integrated_commits` to odpowiedniki w `build/tmz`.
-- **Nie scala się ich do `build/tmz`.** Treść weszła tam dawnymi merge'ami `cc2b71d18`,
-  `0cea6397d` i `a22572dde`. Stan zamierzony wygląda tak:
-  - `git log build/tmz..fix/inventory-drop-cell` i `..feature/inventory-drop-preview` są
-    puste, bo to te same commity;
-  - `git cherry build/tmz feature/inventory-cell-grid` daje `- + + - +`. Środkowe `+` to
-    `fe243d080` i `2b665a2b0`, które od `e9fb81e26` i `8c031bfb9` różnią się wyłącznie
-    wyciętym dodaniem i cofnięciem `screen_cell_size` w `gamedata`. Ostatni `+` to
-    `ea5103d0e`. Na `build/tmz` te same pliki weszły commitem `5c3e60bfd`, który podmienia
-    starsze kopie, więc patch-id jest inny.
+  `-- src tests` ogranicza patch do kodu i testów. Gdyby kod cell-grid zaczął ruszać coś
+  poza tymi katalogami, listę trzeba rozszerzyć, bo inaczej patch po cichu to zgubi.
+  Plik drop-preview ma dwa commity, plik cell-grid cztery.
+- `patch.json` wskazuje gałąź w `branch`, a `original_commits` to SHA na gałęzi. W cell-grid
+  `integrated_commits` to odpowiedniki w `build/tmz`, łącznie z merge'em `e9103f55e`.
+- **Do `build/tmz` scala się czubek `feature/inventory-cell-grid`** jawnym `merge --no-ff`
+  (21.09: `e9103f55e`). Jeden merge wnosi zmianę z dowolnego ogniwa, bo czubek niesie cały
+  łańcuch. Kod sprzed 21.09 wszedł dawnymi merge'ami `cc2b71d18`, `0cea6397d` i `a22572dde`,
+  więc przy konflikcie w plikach inventory wersja z gałęzi jest właściwa. Po merge'u
+  sprawdź, że `git diff HEAD^1 HEAD` równa się zmianie w łańcuchu. Stan zamierzony:
+  `git log build/tmz..<każda z trzech gałęzi>` jest pusty.
 
   Równoważność kodu:
   ```sh
-  git diff build/tmz feature/inventory-cell-grid -- $(git diff --name-only default feature/inventory-cell-grid -- src tests)
+  git diff build/tmz feature/inventory-cell-grid -- $(git diff --name-only fix/inventory-drop-cell^ feature/inventory-cell-grid -- src tests)
   ```
-  → puste.
+  → puste. Bazą jest rodzic `fix/inventory-drop-cell`, nie `default`: `default` przesuwa się
+  z upstreamem, a łańcuch nie, więc lista złapałaby też pliki upstreamu.
 - **`apply.py` pakietów drop-* nie rozpoznaje własnej poprawki po nałożeniu cell-grid**
   (kody 1 i 2 zamiast 0), bo cell-grid przepisuje ich linie. Stan takiego repozytorium
   zgłasza dopiero `apply.py` pakietu cell-grid.
@@ -193,13 +188,11 @@ default 6c793faee
 
 1. `git rebase --update-refs --onto upstream/default <verified_upstream_base> feature/inventory-cell-grid`
    przesuwa wszystkie trzy gałęzie naraz.
-2. Jednorazowo, dopóki na czubku leży pozostałość `ea5103d0e`, usuń jej przeniesioną kopię.
-   `git show --stat HEAD` ma pokazać wyłącznie `patches/`, potem `git reset --hard HEAD~1`.
-3. W checkoucie `build/tmz` wygeneruj patche poleceniami wyżej, zaktualizuj `patch.json`
+2. W checkoucie `build/tmz` wygeneruj patche poleceniami wyżej, zaktualizuj `patch.json`
    (baza, commity, `sha256`) i README pakietów, po czym zrób commit na `build/tmz`.
-4. Uruchom testy na każdym commicie łańcucha i macierz `apply.py` z pakietów `build/tmz`
+3. Uruchom testy na każdym commicie łańcucha i macierz `apply.py` z pakietów `build/tmz`
    na czystym nowym upstreamie.
-5. Wypchnij trzy gałęzie z `--force-with-lease=<ref>:<stary sha>`, a `build/tmz` zwykłym pushem.
+4. Wypchnij trzy gałęzie z `--force-with-lease=<ref>:<stary sha>`, a `build/tmz` zwykłym pushem.
 
 ## Aktualizacja pakietu
 
